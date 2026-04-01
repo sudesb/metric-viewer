@@ -1609,20 +1609,26 @@ function toAbsoluteResourceUrl(href) {
 }
 
 function toNbviewerLink(href) {
-  // For reliability across hosts, "Open online" opens the public file URL directly.
-  // (nbviewer can fail depending on host visibility and URL style.)
   const abs = toAbsoluteResourceUrl(href);
   if (!abs) return '';
-  return abs;
+  try {
+    const u = new URL(abs);
+    const host = (u.hostname || '').toLowerCase();
+    if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return '';
+  } catch (_) {
+    return '';
+  }
+  // nbviewer rendered view (validated pattern)
+  return 'https://nbviewer.org/urls/' + abs.replace(/^https?:\/\//i, '');
 }
 
 function openOnlineNotebook(href) {
-  const abs = toAbsoluteResourceUrl(href);
-  if (!abs) {
+  const url = toNbviewerLink(href);
+  if (!url) {
     alert('Open online is unavailable in file:// mode. Please open the site via http(s).');
     return;
   }
-  window.open(abs, '_blank', 'noopener');
+  window.open(url, '_blank', 'noopener');
 }
 
 function fileNameFromHref(href) {
