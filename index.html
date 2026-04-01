@@ -1604,6 +1604,15 @@ function toNbviewerLink(href) {
   return abs;
 }
 
+function openOnlineNotebook(href) {
+  const abs = toAbsoluteResourceUrl(href);
+  if (!abs) {
+    alert('Open online is unavailable in file:// mode. Please open the site via http(s).');
+    return;
+  }
+  window.open(abs, '_blank', 'noopener');
+}
+
 function fileNameFromHref(href) {
   if (!href) return 'file';
   const clean = href.split('?')[0].split('#')[0];
@@ -1957,7 +1966,7 @@ function openDetail(index) {
                 ? `${isNotebookPath(sagemathLink)
                      ? `<div style="margin-top:0.4rem;display:flex;gap:0.9rem;flex-wrap:wrap;">
                           ${toNbviewerLink(sagemathLink)
-                            ? `<a href="${escapeAttr(toNbviewerLink(sagemathLink))}" target="_blank" rel="noopener" class="drive-link" style="font-size:0.85rem;">
+                            ? `<a href="#" onclick="event.preventDefault(); openOnlineNotebook('${escapeAttr(sagemathLink)}');" class="drive-link" style="font-size:0.85rem;">
                                  Open online
                                </a>`
                             : `<span class="metric-unavailable" style="padding:0;font-size:0.85rem;">Open online unavailable in file:// mode</span>`}
