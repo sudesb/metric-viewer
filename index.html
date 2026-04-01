@@ -1585,6 +1585,17 @@ function resolveResourceHref(...candidates) {
   return encodeURI(LOCAL_FILES_BASES[0] + '/' + cleaned);
 }
 
+function resolvePdfHref(...candidates) {
+  const raw = candidates.find(v => typeof v === 'string' && v.trim());
+  if (!raw) return '';
+  const v = raw.trim();
+  if (/^https?:\/\//i.test(v)) return v;
+  const cleaned = v.replace(/^\.?\//, '');
+  if (cleaned.includes('/')) return encodeURI(cleaned);
+  // Keep PDF behavior simple: open directly from local/public metric-file folder.
+  return encodeURI('metric-file/' + cleaned);
+}
+
 function isHttpUrl(v) {
   return /^https?:\/\//i.test(v || '');
 }
@@ -1971,7 +1982,7 @@ function openDetail(index) {
     m['SageMath (.ipynb) Link']
   );
 
-  const fullPdfLink = resolveResourceHref(
+  const fullPdfLink = resolvePdfHref(
     m['PDF local file'],
     m['Pdf local file'],
     m['Full PDF Local File'],
