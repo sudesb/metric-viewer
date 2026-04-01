@@ -1560,6 +1560,10 @@ function escapeAttr(s) { return s.replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 function escapeHTML(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 const LOCAL_FILES_BASES = ['metric-file', 'metric-files'];
+// Optional: set this to your public GitHub raw folder URL.
+// Example:
+// const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/<user>/<repo>/<branch>/metric-file';
+const GITHUB_RAW_BASE = '';
 
 function resolveResourceHref(...candidates) {
   const raw = candidates.find(v => typeof v === 'string' && v.trim());
@@ -1568,7 +1572,15 @@ function resolveResourceHref(...candidates) {
   if (/^https?:\/\//i.test(v)) return v;
   // If a local relative path is provided, keep it. Otherwise place it under the local files folder.
   const cleaned = v.replace(/^\.?\//, '');
-  if (cleaned.includes('/')) return encodeURI(cleaned);
+  if (cleaned.includes('/')) {
+    if (GITHUB_RAW_BASE && !cleaned.startsWith('metric-file/') && !cleaned.startsWith('metric-files/')) {
+      return encodeURI(GITHUB_RAW_BASE.replace(/\/+$/, '') + '/' + cleaned.replace(/^\/+/, ''));
+    }
+    return encodeURI(cleaned);
+  }
+  if (GITHUB_RAW_BASE) {
+    return encodeURI(GITHUB_RAW_BASE.replace(/\/+$/, '') + '/' + cleaned);
+  }
   // Default to metric-file first (current setup), keep metric-files fallback for compatibility.
   return encodeURI(LOCAL_FILES_BASES[0] + '/' + cleaned);
 }
