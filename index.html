@@ -1618,7 +1618,15 @@ function toNbviewerLink(href) {
   } catch (_) {
     return '';
   }
-  // nbviewer rendered view (validated pattern)
+  // Prefer direct GitHub rendering route when source is raw.githubusercontent.com
+  // raw:  https://raw.githubusercontent.com/user/repo/branch/path/file.ipynb
+  // view: https://nbviewer.org/github/user/repo/blob/branch/path/file.ipynb
+  const m = abs.match(/^https?:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+)$/i);
+  if (m) {
+    const [, owner, repo, branch, rest] = m;
+    return `https://nbviewer.org/github/${owner}/${repo}/blob/${branch}/${rest}`;
+  }
+  // Fallback for other public hosts
   return 'https://nbviewer.org/urls/' + abs.replace(/^https?:\/\//i, '');
 }
 
