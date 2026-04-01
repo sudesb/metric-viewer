@@ -1607,8 +1607,9 @@ function toNbviewerLink(href) {
   } catch (_) {
     return '';
   }
-  const normalized = abs.replace(/^https?:\/\//i, '');
-  return 'https://nbviewer.org/urls/' + normalized;
+  // Most reliable form for public URLs:
+  // https://nbviewer.org/url/<absolute-url>
+  return 'https://nbviewer.org/url/' + abs;
 }
 
 function fileNameFromHref(href) {
