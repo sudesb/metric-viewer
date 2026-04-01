@@ -1597,19 +1597,11 @@ function toAbsoluteResourceUrl(href) {
 }
 
 function toNbviewerLink(href) {
+  // For reliability across hosts, "Open online" opens the public file URL directly.
+  // (nbviewer can fail depending on host visibility and URL style.)
   const abs = toAbsoluteResourceUrl(href);
   if (!abs) return '';
-  try {
-    const u = new URL(abs);
-    const host = (u.hostname || '').toLowerCase();
-    // nbviewer cannot reach private/local hosts.
-    if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return '';
-  } catch (_) {
-    return '';
-  }
-  // Most reliable form for public URLs:
-  // https://nbviewer.org/url/<absolute-url>
-  return 'https://nbviewer.org/url/' + abs;
+  return abs;
 }
 
 function fileNameFromHref(href) {
