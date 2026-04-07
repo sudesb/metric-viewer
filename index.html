@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Search and filter Newman-Penrose metric data from Exact Solutions of Einstein's Field Equations with Weyl, Ricci, spin coefficient, and TeX metric details.">
+<meta property="og:title" content="NP Metrics - Exact Solutions Database">
+<meta property="og:description" content="An interactive database of exact solutions in general relativity with Newman-Penrose components and TeX metric forms.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NP Metrics - Exact Solutions Database">
+<meta name="twitter:description" content="Browse exact GR solutions by Weyl type, symmetry, source terms, spin coefficients, and metric form.">
 <title>NP Metrics — Exact Solutions Database</title>
 <style>
 /* ═══════════════════════ RESET & VARIABLES ═══════════════════════ */
@@ -14,7 +21,6 @@
   --bg-card:    #1a2236;
   --bg-hover:   #1f2b42;
   --bg-modal:   #141c2e;
-  /* dark theme accent (blue) */
   --accent:     #60a5fa;
   --accent-dim: #3b82f6;
   --accent-glow: rgba(96,165,250,0.15);
@@ -33,29 +39,6 @@
   --font-mono:  'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   --font-sans:  'DM Sans', 'Segoe UI', sans-serif;
   --transition: 0.25s cubic-bezier(.4,0,.2,1);
-}
-
-/* Light theme (intentionally not white) */
-html[data-theme="light"] {
-  /* warm, parchment-like neutrals */
-  --bg-deep:    #f1eee7;
-  --bg-surface: #e8e1d6;
-  --bg-card:    #ded4c6;
-  --bg-hover:   #d6c8b4;
-  --bg-modal:   #e3dbcf;
-  /* warm accent (no blues) */
-  --accent:     #b45309;
-  --accent-dim: #92400e;
-  --accent-glow: rgba(180,83,9,0.12);
-  --gold:       #b45309;
-  --green:      #047857;
-  --rose:       #be123c;
-  --violet:     #6d28d9;
-  --text:       #14110b;
-  --text-dim:   #2a241a;
-  --text-muted: #4b5563;
-  --border:     rgba(24,18,8,0.18);
-  --border-lit: rgba(24,18,8,0.28);
 }
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -89,13 +72,6 @@ body {
   padding: 2rem;
 }
 
-.hero-theme-toggle {
-  position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-  z-index: 5;
-}
-
 #hero::before {
   content: '';
   position: absolute;
@@ -107,13 +83,6 @@ body {
   pointer-events: none;
 }
 
-html[data-theme="light"] #hero::before {
-  background:
-    radial-gradient(ellipse 600px 400px at 30% 20%, rgba(180,83,9,0.12), transparent),
-    radial-gradient(ellipse 500px 500px at 70% 70%, rgba(109,40,217,0.05), transparent),
-    radial-gradient(ellipse 300px 300px at 50% 50%, rgba(180,83,9,0.05), transparent);
-}
-
 .hero-grid {
   position: absolute;
   inset: 0;
@@ -123,12 +92,6 @@ html[data-theme="light"] #hero::before {
   background-size: 60px 60px;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent);
   pointer-events: none;
-}
-
-html[data-theme="light"] .hero-grid {
-  background-image:
-    linear-gradient(rgba(180,83,9,0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(180,83,9,0.045) 1px, transparent 1px);
 }
 
 .hero-label {
@@ -147,7 +110,7 @@ html[data-theme="light"] .hero-grid {
   font-size: clamp(2.2rem, 5vw, 4.2rem);
   font-weight: 600;
   line-height: 1.15;
-  color: var(--text);
+  color: #f1f5f9;
   margin-bottom: 1.5rem;
   max-width: 700px;
   opacity: 0;
@@ -217,11 +180,6 @@ html[data-theme="light"] .hero-grid {
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(96,165,250,0.3);
 }
-
-html[data-theme="light"] .hero-btn:hover {
-  background: #c0841a;
-  box-shadow: 0 8px 30px rgba(180,83,9,0.22);
-}
 .hero-btn svg { width: 18px; height: 18px; }
 
 .hero-eq {
@@ -230,10 +188,6 @@ html[data-theme="light"] .hero-btn:hover {
   font-size: 1.5rem;
   pointer-events: none;
   user-select: none;
-}
-
-html[data-theme="light"] .hero-eq {
-  color: rgba(180,83,9,0.55);
 }
 .hero-eq .katex { color: inherit; }
 
@@ -259,11 +213,6 @@ html[data-theme="light"] .hero-eq {
   border-bottom: 1px solid var(--border);
 }
 
-/* Use theme surface color with translucency */
-html[data-theme="light"] .topbar {
-  background: rgba(241,238,231,0.82);
-}
-
 .topbar-back {
   display: flex; align-items: center; gap: 0.4rem;
   background: none; border: 1px solid var(--border-lit);
@@ -279,7 +228,7 @@ html[data-theme="light"] .topbar {
   font-family: var(--font-body);
   font-size: 1.15rem;
   font-weight: 600;
-  color: var(--text);
+  color: #f1f5f9;
   flex: 1;
 }
 
@@ -291,23 +240,6 @@ html[data-theme="light"] .topbar {
   padding: 0.3rem 0.8rem;
   border-radius: 20px;
 }
-
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  background: none;
-  border: 1px solid var(--border-lit);
-  color: var(--text-dim);
-  font-size: 0.85rem;
-  padding: 0.4rem 0.75rem;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: var(--transition);
-  font-family: var(--font-sans);
-}
-.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
-.theme-toggle svg { width: 16px; height: 16px; }
 
 /* Layout */
 .app-layout {
@@ -397,10 +329,6 @@ html[data-theme="light"] .topbar {
 .filter-header:hover { border-color: var(--border-lit); background: var(--bg-hover); }
 .filter-header.active { border-color: var(--accent-dim); background: rgba(59,130,246,0.08); }
 
-html[data-theme="light"] .filter-header.active {
-  background: rgba(180,83,9,0.12);
-}
-
 .filter-header-left {
   display: flex;
   align-items: center;
@@ -409,7 +337,7 @@ html[data-theme="light"] .filter-header.active {
 
 .filter-header-title {
   font-size: 0.85rem;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--text);
 }
 
@@ -483,10 +411,9 @@ html[data-theme="light"] .filter-header.active {
 
 .attr-filters-label {
   font-size: 0.75rem;
-  color: var(--text);
+  color: #fff;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-weight: 400;
   margin-bottom: 0.5rem;
 }
 
@@ -500,14 +427,14 @@ html[data-theme="light"] .filter-header.active {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  color: var(--text);
+  color: #fff;
   font-family: var(--font-sans);
   font-size: 0.83rem;
   cursor: pointer;
   transition: var(--transition);
 }
-.attr-btn:hover { border-color: var(--border-lit); color: var(--text); }
-.attr-btn.has-filters { border-color: var(--accent-dim); color: var(--text); }
+.attr-btn:hover { border-color: var(--border-lit); color: #fff; }
+.attr-btn.has-filters { border-color: var(--accent-dim); color: #fff; }
 
 /* Active chips */
 .active-filters {
@@ -530,10 +457,6 @@ html[data-theme="light"] .filter-header.active {
   font-size: 0.75rem;
   color: var(--accent);
   white-space: nowrap;
-}
-
-html[data-theme="light"] .chip {
-  border: 1px solid rgba(180,83,9,0.22);
 }
 
 .chip-remove {
@@ -639,17 +562,6 @@ td:first-child { color: var(--text-muted); font-family: var(--font-mono); font-s
 .weyl-II { background: rgba(255,255,255,0.05); color: #fff; }
 .weyl-I  { background: rgba(255,255,255,0.05); color: #fff; }
 
-/* Light theme: avoid white-on-beige */
-html[data-theme="light"] .weyl-O,
-html[data-theme="light"] .weyl-N,
-html[data-theme="light"] .weyl-D,
-html[data-theme="light"] .weyl-III,
-html[data-theme="light"] .weyl-II,
-html[data-theme="light"] .weyl-I {
-  background: rgba(20,17,11,0.06);
-  color: var(--text);
-}
-
 .source-tag {
   font-size: 0.78rem;
   color: var(--text-muted);
@@ -663,8 +575,6 @@ html[data-theme="light"] .weyl-I {
   gap: 0.25rem;
 }
 .drive-link:hover { color: #93c5fd; }
-
-html[data-theme="light"] .drive-link:hover { color: #b45309; }
 
 .row-arrow {
   color: var(--text-muted);
@@ -717,6 +627,18 @@ tbody tr:hover .row-arrow { color: var(--accent); transform: translateX(3px); }
 .page-btn:disabled { opacity: 0.3; cursor: default; }
 .page-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg-deep); }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ═══════════════════════ MODAL ═══════════════════════ */
 .modal-overlay {
   position: fixed;
@@ -763,7 +685,7 @@ tbody tr:hover .row-arrow { color: var(--accent); transform: translateX(3px); }
   font-family: var(--font-body);
   font-size: 1.4rem;
   font-weight: 600;
-  color: var(--text);
+  color: #f1f5f9;
   line-height: 1.3;
 }
 
@@ -925,14 +847,6 @@ tbody tr:hover .row-arrow { color: var(--accent); transform: translateX(3px); }
 .val-nzc  { background: rgba(255,255,255,0.05); color: #fff;}
 .val-other { background: rgba(255,255,255,0.05); color: #fff; }
 
-html[data-theme="light"] .val-zero,
-html[data-theme="light"] .val-nzr,
-html[data-theme="light"] .val-nzc,
-html[data-theme="light"] .val-other {
-  background: rgba(20,17,11,0.06);
-  color: var(--text);
-}
-
 /* Attribute Filter Modal */
 .attr-modal {
   max-width: 600px;
@@ -999,8 +913,6 @@ html[data-theme="light"] .val-other {
 }
 .btn-primary:hover { background: #93c5fd; }
 
-html[data-theme="light"] .btn-primary:hover { background: #b45309; }
-
 /* Loading */
 .loading {
   display: flex;
@@ -1010,6 +922,41 @@ html[data-theme="light"] .btn-primary:hover { background: #b45309; }
   padding: 4rem;
   gap: 1rem;
   color: var(--text-muted);
+}
+
+.loading-text {
+  text-align: center;
+}
+
+.loading-error {
+  color: var(--rose);
+  text-align: center;
+  max-width: 420px;
+}
+
+.loading-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.file-picker-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--border-lit);
+  border-radius: var(--radius);
+  color: var(--text);
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.file-picker-label:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .spinner {
@@ -1047,14 +994,6 @@ html[data-theme="light"] .btn-primary:hover { background: #b45309; }
   <div class="hero-eq" id="hero-eq-4" style="bottom:25%;right:15%"></div>
   <div class="hero-eq" id="hero-eq-5" style="top:45%;right:8%"></div>
 
-  <button class="theme-toggle hero-theme-toggle" id="theme-toggle-hero" type="button" onclick="toggleTheme()" aria-label="Toggle theme">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M3 12h2M19 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-      <circle cx="12" cy="12" r="4"/>
-    </svg>
-    <span id="theme-toggle-label-hero">Light</span>
-  </button>
-
   <div class="hero-label">Newman–Penrose Formalism</div>
   <h1 class="hero-title">Exact Solutions in <em>General Relativity</em></h1>
   <p class="hero-desc">
@@ -1085,13 +1024,6 @@ html[data-theme="light"] .btn-primary:hover { background: #b45309; }
       Filters
     </button>
     <div class="topbar-title">Metrics Database</div>
-    <button class="theme-toggle" id="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Toggle theme">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M3 12h2M19 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-        <circle cx="12" cy="12" r="4"/>
-      </svg>
-      <span id="theme-toggle-label">Light</span>
-    </button>
     <div class="topbar-count" id="metric-count">0 metrics</div>
   </div>
 
@@ -1127,18 +1059,18 @@ html[data-theme="light"] .btn-primary:hover { background: #b45309; }
     <!-- Main -->
     <main class="main-content">
       <div class="table-wrap">
-        <table>
+        <table aria-label="Metrics database results">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Equation</th>
-              <th>Book</th>
-              <th>Page</th>
-              <th>Weyl Type</th>
-              <th>Symmetry</th>
-              <th>Source (T<sub>μν</sub>)</th>
-              <th>Additional Conditions</th>
-              <th></th>
+              <th scope="col">#</th>
+              <th scope="col">Equation</th>
+              <th scope="col">Book</th>
+              <th scope="col">Page</th>
+              <th scope="col">Weyl Type</th>
+              <th scope="col">Symmetry</th>
+              <th scope="col">Source (T<sub>μν</sub>)</th>
+              <th scope="col">Additional Conditions</th>
+              <th scope="col"><span class="sr-only">Open details</span></th>
             </tr>
           </thead>
           <tbody id="table-body">
@@ -1148,48 +1080,27 @@ html[data-theme="light"] .btn-primary:hover { background: #b45309; }
       </div>
       <div class="loading" id="loading">
         <div class="spinner"></div>
-        Loading metrics data...
+        <div class="loading-text">Loading metrics data...</div>
+        <div class="loading-actions" id="loading-actions" style="display:none">
+          <label class="file-picker-label" for="xlsx-input">Choose local .xlsx file</label>
+          <input type="file" id="xlsx-input" accept=".xlsx" class="sr-only">
+        </div>
       </div>
     </main>
   </div>
 </div>
 
 <!-- Detail Modal -->
-<div class="modal-overlay" id="detail-modal">
-  <div class="modal" id="detail-modal-content"></div>
+<div class="modal-overlay" id="detail-modal" aria-hidden="true">
+  <div class="modal" id="detail-modal-content" role="dialog" aria-modal="true" aria-labelledby="detail-modal-title" tabindex="-1"></div>
 </div>
 
 <!-- Attribute Filter Modal -->
-<div class="modal-overlay" id="attr-modal">
-  <div class="modal attr-modal" id="attr-modal-content"></div>
+<div class="modal-overlay" id="attr-modal" aria-hidden="true">
+  <div class="modal attr-modal" id="attr-modal-content" role="dialog" aria-modal="true" aria-labelledby="attr-modal-title" tabindex="-1"></div>
 </div>
 
 <script>
-/* ═══════════════════════ THEME ═══════════════════════ */
-function getTheme() {
-  const saved = localStorage.getItem('np_metrics_theme');
-  return saved === 'light' || saved === 'dark' ? saved : 'light';
-}
-
-function syncThemeToggleLabels(theme) {
-  const nextLabel = theme === 'dark' ? 'Light' : 'Dark';
-  const labelApp = document.getElementById('theme-toggle-label');
-  const labelHero = document.getElementById('theme-toggle-label-hero');
-  if (labelApp) labelApp.textContent = nextLabel;
-  if (labelHero) labelHero.textContent = nextLabel;
-}
-
-function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('np_metrics_theme', theme);
-  syncThemeToggleLabels(theme);
-}
-
-function toggleTheme() {
-  const cur = document.documentElement.getAttribute('data-theme') || 'dark';
-  applyTheme(cur === 'dark' ? 'light' : 'dark');
-}
-
 /* ═══════════════════════ SYMBOL CONVERTER ═══════════════════════ */
 const GREEK = {
   'psi':'ψ','Psi':'Ψ','phi':'φ','Phi':'Φ','rho':'ρ','muu':'μ','mu':'μ',
@@ -1338,12 +1249,14 @@ let currentPage = 0;
 let rowsPerPage = 25;
 let searchTerm = '';
 let debounceTimer = null;
+let lastFocusedElement = null;
 
 const filters = {
   weyl: [],
   symmetry: [],
   source: [],
-  lambda: []
+  lambda: [],
+  diagonal: []
 };
 
 const attrFilters = {
@@ -1369,6 +1282,7 @@ function normalizeWeyl(val) {
 }
 
 const SOURCE_TYPES = ['Vacuum', 'Einstein-Maxwell', 'Perfect Fluid', 'Dust', 'Radiation', 'Anisotropic Fluid', 'Anisotropic Matter', 'Λ-term'];
+const DIAGONAL_TYPES = ['Diagonal', 'Non-diagonal'];
 
 function normalizeSource(val) {
   if (!val) return [''];
@@ -1412,7 +1326,8 @@ const FILTER_CATEGORIES = [
   { key: 'weyl',     title: 'Weyl Type',    encodedField: 'Weyl (Label Encoded)',              rawField: 'Weyl', fixedOptions: WEYL_TYPES, normalize: normalizeWeyl },
   { key: 'symmetry', title: 'Symmetry',     encodedField: 'Symmetry (Label Encoded)',          rawField: 'Symmetry', fixedOptions: SYMMETRY_TYPES, normalize: normalizeSymmetry },
   { key: 'source',   title: 'Source (T_μν)', encodedField: 'Source (T_μν) (Label Encoded)',  rawField: 'Source (T_μν)', fixedOptions: SOURCE_TYPES, normalize: normalizeSource },
-  { key: 'lambda',   title: 'Λ Coefficient', encodedField: null,                               rawField: 'Lambda', fixedOptions: ['0','nzr'] }
+  { key: 'lambda',   title: 'Λ Coefficient', encodedField: null,                               rawField: 'Lambda', fixedOptions: ['0','nzr'] },
+  { key: 'diagonal', title: 'Metric Form', encodedField: null, rawField: 'Metric Diagonal Type', fixedOptions: DIAGONAL_TYPES }
 ];
 
 
@@ -1422,57 +1337,31 @@ const FILTER_CATEGORIES = [
 
 let TEX_METRICS = [];
 
-function setLoadingMessage(html) {
-  const loading = document.getElementById('loading');
-  if (loading) loading.innerHTML = html;
+function inferMetricDiagonalType(tex) {
+  if (!tex || !tex.trim()) return 'Non-diagonal';
+  const compact = tex
+    .replace(/\s+/g, '')
+    .replace(/\\left|\\right|\\bigl|\\bigr|\\Bigl|\\Bigr|\\!|\\,|\\;|\\:/g, '');
+  const diffToken = 'd(?:\\\\bar\\{\\\\?[A-Za-z]+\\}|\\\\?[A-Za-z]+|[A-Za-z]+)';
+  const normalizeDiff = part => part.replace(/^d/, '').replace(/\\bar\{/g, 'bar_').replace(/[{}\\]/g, '');
+
+  const directProducts = compact.matchAll(new RegExp(`(${diffToken})(?:[([{])?(${diffToken})`, 'g'));
+  for (const match of directProducts) {
+    if (normalizeDiff(match[1]) !== normalizeDiff(match[2])) return 'Non-diagonal';
+  }
+
+  const squaredGroups = compact.matchAll(/[\(\[]([^\)\]]+)[\)\]]\^\{?2\}?/g);
+  for (const match of squaredGroups) {
+    const diffs = [...match[1].matchAll(new RegExp(diffToken, 'g'))].map(item => normalizeDiff(item[0]));
+    if (new Set(diffs).size > 1) return 'Non-diagonal';
+  }
+
+  return 'Diagonal';
 }
 
-function addLocalFileLoaderUI() {
-  const loading = document.getElementById('loading');
-  if (!loading) return;
-
-  setLoadingMessage(`
-    <div style="max-width:520px;text-align:center;line-height:1.5">
-      <div style="font-weight:700;color:var(--rose);margin-bottom:0.4rem;">Couldn’t auto-load the Excel file</div>
-      <div style="color:var(--text-dim);margin-bottom:1rem;">
-        If you opened this page via <span style="font-family:var(--font-mono)">file://</span>, the browser may block loading
-        <span style="font-family:var(--font-mono)">metricv1.xlsx</span>.
-      </div>
-      <div style="display:flex;flex-direction:column;gap:0.6rem;align-items:center">
-        <label class="hero-btn" style="opacity:1;animation:none;cursor:pointer;">
-          Select Excel (.xlsx)
-          <input id="xlsx-input" type="file" accept=".xlsx" style="display:none">
-        </label>
-        <div style="font-size:0.85rem;color:var(--text-muted);">
-          Tip: Or run a local server in the folder and open
-          <span style="font-family:var(--font-mono)">http://localhost:8000/metrics-viewer-standalone_2.html</span>
-        </div>
-      </div>
-    </div>
-  `);
-
-  const input = document.getElementById('xlsx-input');
-  if (!input) return;
-  input.addEventListener('change', async (ev) => {
-    const file = ev.target.files && ev.target.files[0];
-    if (!file) return;
-    try {
-      const buf = await file.arrayBuffer();
-      await loadMetricsFromArrayBuffer(buf);
-    } catch (err) {
-      console.error(err);
-      setLoadingMessage('<div style="color:var(--rose)">Failed to read the selected file.<br><small>' + escapeHTML(String(err && err.message ? err.message : err)) + '</small></div>');
-    }
-  });
-}
-
-async function loadMetricsFromArrayBuffer(buf) {
-  const wb = XLSX.read(buf, { type: 'array' });
-  const ws = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
-
+function prepareRows(rows) {
   TEX_METRICS = rows.map(m => String(m['Metric_LaTeX'] || ''));
-  rows.forEach(m => {
+  rows.forEach((m, index) => {
     delete m['Metric_LaTeX'];
     if (m['Source (T_munu)'] !== undefined && m['Source (T_μν)'] === undefined) {
       m['Source (T_μν)'] = m['Source (T_munu)'];
@@ -1483,15 +1372,28 @@ async function loadMetricsFromArrayBuffer(buf) {
       delete m['Source (T_munu) (Label Encoded)'];
     }
     Object.keys(m).forEach(k => { m[k] = String(m[k]); });
+    m['Metric Diagonal Type'] = inferMetricDiagonalType(TEX_METRICS[index]);
   });
-
   allMetrics = rows.filter(m => m['Equation Number'] || m['Equation Name']);
   document.getElementById('stat-metrics').textContent = allMetrics.length;
   buildFilterOptions();
   applyFilters();
   renderHeroEquations();
+}
+
+function showLoadingError(message) {
   const loading = document.getElementById('loading');
-  if (loading) loading.style.display = 'none';
+  const actions = document.getElementById('loading-actions');
+  loading.querySelector('.spinner').style.display = 'none';
+  loading.querySelector('.loading-text').innerHTML = `<div class="loading-error">${message}</div>`;
+  actions.style.display = 'flex';
+}
+
+async function loadWorkbookFromArrayBuffer(buf) {
+  const wb = XLSX.read(buf, { type: 'array' });
+  const ws = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+  prepareRows(rows);
 }
 
 async function init() {
@@ -1499,10 +1401,10 @@ async function init() {
     const resp = await fetch('metricv1.xlsx');
     if (!resp.ok) throw new Error('Failed to load xlsx (HTTP ' + resp.status + ')');
     const buf = await resp.arrayBuffer();
-    await loadMetricsFromArrayBuffer(buf);
+    await loadWorkbookFromArrayBuffer(buf);
   } catch (e) {
     console.error('Failed to load data:', e);
-    addLocalFileLoaderUI();
+    showLoadingError('Failed to load metrics data automatically.<br><small>' + escapeHTML(e.message) + '</small><br><small>If you opened this page directly from your computer, choose the local <code>.xlsx</code> file below.</small>');
   }
 }
 
@@ -1558,127 +1460,6 @@ function getUniqueValues(cat) {
 
 function escapeAttr(s) { return s.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 function escapeHTML(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-const LOCAL_FILES_BASES = ['metric-file', 'metric-files'];
-// Optional remote base (unused for local-first mode)
-const GITHUB_RAW_BASE = '';
-
-function resolveResourceHref(...candidates) {
-  const raw = candidates.find(v => typeof v === 'string' && v.trim());
-  if (!raw) return '';
-  const v = raw.trim();
-  if (/^https?:\/\//i.test(v)) return v;
-  // If a local relative path is provided, keep it. Otherwise place it under the local files folder.
-  const cleaned = v.replace(/^\.?\//, '');
-  if (cleaned.includes('/')) return encodeURI(cleaned);
-  // Default to metric-file first (current setup), keep metric-files fallback for compatibility.
-  return encodeURI(LOCAL_FILES_BASES[0] + '/' + cleaned);
-}
-
-function resolvePdfHref(...candidates) {
-  const raw = candidates.find(v => typeof v === 'string' && v.trim());
-  if (!raw) return '';
-  const v = raw.trim();
-  if (/^https?:\/\//i.test(v)) return v;
-  const cleaned = v.replace(/^\.?\//, '');
-  if (cleaned.includes('/')) return encodeURI(cleaned);
-  // Keep PDF behavior simple: open directly from local/public metric-file folder.
-  return encodeURI('metric-file/' + cleaned);
-}
-
-function isHttpUrl(v) {
-  return /^https?:\/\//i.test(v || '');
-}
-
-function isNotebookPath(v) {
-  return /\.ipynb(?:$|\?)/i.test(v || '');
-}
-
-function toJupyterLabLink(v) {
-  if (!v || isHttpUrl(v)) return '';
-  // Works when user runs local JupyterLab on default port.
-  return 'http://localhost:8888/lab/tree/' + v;
-}
-
-function toAbsoluteResourceUrl(href) {
-  if (!href) return '';
-  if (isHttpUrl(href)) return href;
-  if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
-    return new URL(href, window.location.href).toString();
-  }
-  return '';
-}
-
-function toNbviewerLink(href) {
-  const abs = toAbsoluteResourceUrl(href);
-  if (!abs) return '';
-  try {
-    const u = new URL(abs);
-    const host = (u.hostname || '').toLowerCase();
-    if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return '';
-  } catch (_) {
-    return '';
-  }
-  // Prefer direct GitHub rendering route when source is raw.githubusercontent.com
-  // raw:  https://raw.githubusercontent.com/user/repo/branch/path/file.ipynb
-  // view: https://nbviewer.org/github/user/repo/blob/branch/path/file.ipynb
-  const m = abs.match(/^https?:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+)$/i);
-  if (m) {
-    const [, owner, repo, branch, rest] = m;
-    return `https://nbviewer.org/github/${owner}/${repo}/blob/${branch}/${rest}`;
-  }
-  // Fallback for other public hosts
-  return 'https://nbviewer.org/urls/' + abs.replace(/^https?:\/\//i, '');
-}
-
-function openOnlineNotebook(href) {
-  const url = toNbviewerLink(href);
-  if (!url) {
-    alert('Open online is unavailable in file:// mode. Please open the site via http(s).');
-    return;
-  }
-  window.open(url, '_blank', 'noopener');
-}
-
-function openPdfFile(href) {
-  const abs = toAbsoluteResourceUrl(href);
-  if (!abs) {
-    alert('PDF link is unavailable in file:// mode. Please open the site via http(s).');
-    return;
-  }
-  window.open(abs, '_blank', 'noopener');
-}
-
-function fileNameFromHref(href) {
-  if (!href) return 'file';
-  const clean = href.split('?')[0].split('#')[0];
-  const parts = clean.split('/');
-  return parts[parts.length - 1] || 'file';
-}
-
-async function triggerDownload(href, preferredName) {
-  if (!href) return;
-  const filename = preferredName || fileNameFromHref(href);
-  try {
-    const resp = await fetch(href);
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    const blob = await resp.blob();
-    const objUrl = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = objUrl;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(objUrl);
-  } catch (e) {
-    // Fallback: still open the resource if fetch is blocked.
-    const a = document.createElement('a');
-    a.href = href;
-    a.download = filename;
-    a.click();
-  }
-}
 
 /* ═══════════════════════ FILTER LOGIC ═══════════════════════ */
 function toggleFilter(key) {
@@ -1813,7 +1594,7 @@ function renderTable() {
   }
 
   tbody.innerHTML = pageData.map((m, i) => `
-    <tr onclick="openDetail(${start + i})">
+    <tr tabindex="0" role="button" aria-label="Open details for ${escapeHTML((m['Equation Name'] || m['Equation Number'] || 'metric').replace(/"/g, '&quot;'))}" data-index="${start + i}" onclick="openDetail(${start + i})">
       <td>${m['Kank'] || (start + i + 1)}</td>
       <td>
         <div class="eq-name">${m['Equation Name'] ? toMath(escapeHTML(m['Equation Name'])) : ''}</div>
@@ -1951,6 +1732,7 @@ function openDetail(index) {
 
   const overlay = document.getElementById('detail-modal');
   const content = document.getElementById('detail-modal-content');
+  lastFocusedElement = document.activeElement;
 
   const weylComps = WEYL_FIELDS.map(f => {
     const v = formatValue(m[f]);
@@ -1969,64 +1751,15 @@ function openDetail(index) {
 
   const lambdaVal = formatValue(m['Lambda']);
 
-  const sagemathLink = resolveResourceHref(
-    m['SageMath local File'],
-    m['SageMath local file'],
-    m['SageMath Local File'],
-    m['SageMath File Name'],
-    m['SageMath Drive Link'],
-    m['SageMath File Link'],
-    m['SageMath Link'],
-    m['SageMath Notebook Link'],
-    m['SageMath (.ipynb) Link']
-  );
-
-  const fullPdfLink = resolvePdfHref(
-    m['PDF local file'],
-    m['Pdf local file'],
-    m['Full PDF Local File'],
-    m['Full PDF File Name'],
-    m['Full Detailed PDF Link'],
-    m['Full PDF Link'],
-    m['Detailed PDF Link'],
-    m['Drive File Link']
-  );
-
-  const moreInfoSection = `<div class="modal-section">
-        <div class="modal-section-title">More Information</div>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">SageMath file (.ipynb)</div>
-            <div class="info-value">
-              ${sagemathLink
-                ? `${isNotebookPath(sagemathLink)
-                     ? `<div style="margin-top:0.4rem;display:flex;gap:0.9rem;flex-wrap:wrap;">
-                          ${toNbviewerLink(sagemathLink)
-                            ? `<a href="#" onclick="event.preventDefault(); openOnlineNotebook('${escapeAttr(sagemathLink)}');" class="drive-link" style="font-size:0.85rem;">
-                                 Open online
-                               </a>`
-                            : `<span class="metric-unavailable" style="padding:0;font-size:0.85rem;">Open online unavailable in file:// mode</span>`}
-                          <a href="#" onclick="event.preventDefault(); triggerDownload('${escapeAttr(sagemathLink)}');" class="drive-link" style="font-size:0.85rem;">
-                            Download
-                          </a>
-                        </div>`
-                     : `<a href="#" onclick="event.preventDefault(); triggerDownload('${escapeAttr(sagemathLink)}');" class="drive-link" style="font-size:0.85rem;">Download</a>`}`
-                : `<span class="metric-unavailable" style="padding:0">Not available</span>`}
-            </div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Full detailed PDF</div>
-            <div class="info-value">
-              ${fullPdfLink
-                ? `<a href="#" onclick="event.preventDefault(); openPdfFile('${escapeAttr(fullPdfLink)}');" class="drive-link">
-                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
-                     Open file
-                   </a>`
-                : `<span class="metric-unavailable" style="padding:0">Not available</span>`}
-            </div>
-          </div>
-        </div>
-       </div>`;
+  const driveLink = m['Drive File Link'] && m['Drive File Link'].trim()
+    ? `<div class="modal-section">
+        <div class="modal-section-title">PDF Document</div>
+        <a href="${escapeAttr(m['Drive File Link'])}" target="_blank" rel="noopener" class="drive-link" style="font-size:0.9rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+          Open in Google Drive
+        </a>
+       </div>`
+    : '';
 
   const addCond = m['Additional Conditions'] && m['Additional Conditions'].trim()
     ? `<div class="info-item" style="grid-column: 1 / -1;">
@@ -2038,10 +1771,10 @@ function openDetail(index) {
   content.innerHTML = `
     <div class="modal-head">
       <div>
-        <div class="modal-title">${m['Equation Name'] ? toMath(escapeHTML(m['Equation Name'])) : ''}</div>
+        <div class="modal-title" id="detail-modal-title">${m['Equation Name'] ? toMath(escapeHTML(m['Equation Name'])) : ''}</div>
         <div class="modal-eq-num">Equation ${escapeHTML(m['Equation Number'] || '—')}</div>
       </div>
-      <button class="modal-close" onclick="closeDetail()">&times;</button>
+      <button class="modal-close" type="button" aria-label="Close details" onclick="closeDetail()">&times;</button>
     </div>
     <div class="modal-body">
       <div class="modal-section" id="metric-tex-section" style="${texStr ? '' : 'display:none'}">
@@ -2076,6 +1809,8 @@ function openDetail(index) {
         </div>
       </div>
 
+      ${driveLink}
+
       <div class="modal-section">
         <div class="modal-section-title">Weyl Components</div>
         <div class="component-grid">${weylComps}</div>
@@ -2097,13 +1832,13 @@ function openDetail(index) {
         <div class="modal-section-title">Spin Coefficients</div>
         <div class="component-grid">${spinComps}</div>
       </div>
-
-      ${moreInfoSection}
     </div>
   `;
 
   overlay.classList.add('show');
+  overlay.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
+  content.focus();
 
   if (texStr && typeof katex !== 'undefined') {
     try {
@@ -2121,8 +1856,11 @@ function openDetail(index) {
 }
 
 function closeDetail() {
-  document.getElementById('detail-modal').classList.remove('show');
+  const overlay = document.getElementById('detail-modal');
+  overlay.classList.remove('show');
+  overlay.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
+  if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') lastFocusedElement.focus();
 }
 
 /* ═══════════════════════ ATTRIBUTE FILTER MODAL ═══════════════════════ */
@@ -2132,6 +1870,7 @@ let tempAttrFilters = {};
 function openAttrModal(group) {
   currentAttrGroup = group;
   tempAttrFilters = JSON.parse(JSON.stringify(attrFilters[group]));
+  lastFocusedElement = document.activeElement;
 
   let fields;
   let title;
@@ -2157,8 +1896,8 @@ function openAttrModal(group) {
 
   content.innerHTML = `
     <div class="modal-head">
-      <div class="modal-title" style="font-size:1.1rem;">${title}</div>
-      <button class="modal-close" onclick="closeAttrModal()">&times;</button>
+      <div class="modal-title" id="attr-modal-title" style="font-size:1.1rem;">${title}</div>
+      <button class="modal-close" type="button" aria-label="Close attribute filters" onclick="closeAttrModal()">&times;</button>
     </div>
     <div class="modal-body">${groups}</div>
     <div class="attr-modal-actions">
@@ -2168,6 +1907,8 @@ function openAttrModal(group) {
   `;
 
   overlay.classList.add('show');
+  overlay.setAttribute('aria-hidden', 'false');
+  content.focus();
 }
 
 function toggleAttrVal(btn) {
@@ -2199,7 +1940,10 @@ function resetAttrFilters() {
 }
 
 function closeAttrModal() {
-  document.getElementById('attr-modal').classList.remove('show');
+  const overlay = document.getElementById('attr-modal');
+  overlay.classList.remove('show');
+  overlay.setAttribute('aria-hidden', 'true');
+  if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') lastFocusedElement.focus();
 }
 
 /* ═══════════════════════ NAVIGATION ═══════════════════════ */
@@ -2218,6 +1962,27 @@ function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
 }
 
+function getFocusableElements(container) {
+  return Array.from(container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'))
+    .filter(el => !el.disabled && el.offsetParent !== null);
+}
+
+function trapFocus(event, container) {
+  if (event.key !== 'Tab') return;
+  const focusable = getFocusableElements(container);
+  if (focusable.length === 0) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
 /* Close modals on overlay click */
 document.getElementById('detail-modal').addEventListener('click', function(e) {
   if (e.target === this) closeDetail();
@@ -2228,9 +1993,37 @@ document.getElementById('attr-modal').addEventListener('click', function(e) {
 
 /* ESC key */
 document.addEventListener('keydown', function(e) {
+  if (document.getElementById('detail-modal').classList.contains('show')) {
+    trapFocus(e, document.getElementById('detail-modal-content'));
+  } else if (document.getElementById('attr-modal').classList.contains('show')) {
+    trapFocus(e, document.getElementById('attr-modal-content'));
+  }
+
   if (e.key === 'Escape') {
     closeDetail();
     closeAttrModal();
+  }
+});
+
+document.getElementById('table-body').addEventListener('keydown', function(e) {
+  const row = e.target.closest('tr[data-index]');
+  if (!row) return;
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    openDetail(Number(row.dataset.index));
+  }
+});
+
+document.getElementById('xlsx-input').addEventListener('change', async function(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  try {
+    const buf = await file.arrayBuffer();
+    await loadWorkbookFromArrayBuffer(buf);
+    showApp();
+  } catch (err) {
+    console.error('Failed to load selected file:', err);
+    showLoadingError('The selected file could not be parsed.<br><small>' + escapeHTML(err.message) + '</small>');
   }
 });
 
@@ -2259,7 +2052,6 @@ function renderHeroEquations() {
 }
 
 /* ═══════════════════════ START ═══════════════════════ */
-applyTheme(getTheme());
 init();
 </script>
 </body>
