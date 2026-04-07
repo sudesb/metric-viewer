@@ -1714,6 +1714,11 @@ function openOnlineNotebook(href) {
 }
 
 function openPdfFile(href) {
+  if (!href) return;
+  if (isHttpUrl(href)) {
+    window.open(href, '_blank', 'noopener');
+    return;
+  }
   const abs = toAbsoluteResourceUrl(href);
   if (!abs) {
     alert('PDF link is unavailable in file:// mode. Please open the site via http(s).');
