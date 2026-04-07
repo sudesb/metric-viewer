@@ -3,13 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Search and filter Newman-Penrose metric data from Exact Solutions of Einstein's Field Equations with Weyl, Ricci, spin coefficient, and TeX metric details.">
-<meta property="og:title" content="NP Metrics - Exact Solutions Database">
-<meta property="og:description" content="An interactive database of exact solutions in general relativity with Newman-Penrose components and TeX metric forms.">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="NP Metrics - Exact Solutions Database">
-<meta name="twitter:description" content="Browse exact GR solutions by Weyl type, symmetry, source terms, spin coefficients, and metric form.">
 <title>NP Metrics — Exact Solutions Database</title>
 <style>
 /* ═══════════════════════ RESET & VARIABLES ═══════════════════════ */
@@ -627,18 +620,6 @@ tbody tr:hover .row-arrow { color: var(--accent); transform: translateX(3px); }
 .page-btn:disabled { opacity: 0.3; cursor: default; }
 .page-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg-deep); }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
 /* ═══════════════════════ MODAL ═══════════════════════ */
 .modal-overlay {
   position: fixed;
@@ -924,41 +905,6 @@ tbody tr:hover .row-arrow { color: var(--accent); transform: translateX(3px); }
   color: var(--text-muted);
 }
 
-.loading-text {
-  text-align: center;
-}
-
-.loading-error {
-  color: var(--rose);
-  text-align: center;
-  max-width: 420px;
-}
-
-.loading-actions {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.file-picker-label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.7rem 1rem;
-  border: 1px solid var(--border-lit);
-  border-radius: var(--radius);
-  color: var(--text);
-  background: var(--bg-card);
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.file-picker-label:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
 .spinner {
   width: 32px;
   height: 32px;
@@ -1059,18 +1005,18 @@ tbody tr:hover .row-arrow { color: var(--accent); transform: translateX(3px); }
     <!-- Main -->
     <main class="main-content">
       <div class="table-wrap">
-        <table aria-label="Metrics database results">
+        <table>
           <thead>
             <tr>
-              <th scope="col">#</th>
-              <th scope="col">Equation</th>
-              <th scope="col">Book</th>
-              <th scope="col">Page</th>
-              <th scope="col">Weyl Type</th>
-              <th scope="col">Symmetry</th>
-              <th scope="col">Source (T<sub>μν</sub>)</th>
-              <th scope="col">Additional Conditions</th>
-              <th scope="col"><span class="sr-only">Open details</span></th>
+              <th>#</th>
+              <th>Equation</th>
+              <th>Book</th>
+              <th>Page</th>
+              <th>Weyl Type</th>
+              <th>Symmetry</th>
+              <th>Source (T<sub>μν</sub>)</th>
+              <th>Additional Conditions</th>
+              <th></th>
             </tr>
           </thead>
           <tbody id="table-body">
@@ -1080,24 +1026,20 @@ tbody tr:hover .row-arrow { color: var(--accent); transform: translateX(3px); }
       </div>
       <div class="loading" id="loading">
         <div class="spinner"></div>
-        <div class="loading-text">Loading metrics data...</div>
-        <div class="loading-actions" id="loading-actions" style="display:none">
-          <label class="file-picker-label" for="xlsx-input">Choose local .xlsx file</label>
-          <input type="file" id="xlsx-input" accept=".xlsx" class="sr-only">
-        </div>
+        Loading metrics data...
       </div>
     </main>
   </div>
 </div>
 
 <!-- Detail Modal -->
-<div class="modal-overlay" id="detail-modal" aria-hidden="true">
-  <div class="modal" id="detail-modal-content" role="dialog" aria-modal="true" aria-labelledby="detail-modal-title" tabindex="-1"></div>
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal" id="detail-modal-content"></div>
 </div>
 
 <!-- Attribute Filter Modal -->
-<div class="modal-overlay" id="attr-modal" aria-hidden="true">
-  <div class="modal attr-modal" id="attr-modal-content" role="dialog" aria-modal="true" aria-labelledby="attr-modal-title" tabindex="-1"></div>
+<div class="modal-overlay" id="attr-modal">
+  <div class="modal attr-modal" id="attr-modal-content"></div>
 </div>
 
 <script>
@@ -1249,14 +1191,12 @@ let currentPage = 0;
 let rowsPerPage = 25;
 let searchTerm = '';
 let debounceTimer = null;
-let lastFocusedElement = null;
 
 const filters = {
   weyl: [],
   symmetry: [],
   source: [],
-  lambda: [],
-  diagonal: []
+  lambda: []
 };
 
 const attrFilters = {
@@ -1282,7 +1222,6 @@ function normalizeWeyl(val) {
 }
 
 const SOURCE_TYPES = ['Vacuum', 'Einstein-Maxwell', 'Perfect Fluid', 'Dust', 'Radiation', 'Anisotropic Fluid', 'Anisotropic Matter', 'Λ-term'];
-const DIAGONAL_TYPES = ['Diagonal', 'Non-diagonal'];
 
 function normalizeSource(val) {
   if (!val) return [''];
@@ -1326,8 +1265,7 @@ const FILTER_CATEGORIES = [
   { key: 'weyl',     title: 'Weyl Type',    encodedField: 'Weyl (Label Encoded)',              rawField: 'Weyl', fixedOptions: WEYL_TYPES, normalize: normalizeWeyl },
   { key: 'symmetry', title: 'Symmetry',     encodedField: 'Symmetry (Label Encoded)',          rawField: 'Symmetry', fixedOptions: SYMMETRY_TYPES, normalize: normalizeSymmetry },
   { key: 'source',   title: 'Source (T_μν)', encodedField: 'Source (T_μν) (Label Encoded)',  rawField: 'Source (T_μν)', fixedOptions: SOURCE_TYPES, normalize: normalizeSource },
-  { key: 'lambda',   title: 'Λ Coefficient', encodedField: null,                               rawField: 'Lambda', fixedOptions: ['0','nzr'] },
-  { key: 'diagonal', title: 'Metric Form', encodedField: null, rawField: 'Metric Diagonal Type', fixedOptions: DIAGONAL_TYPES }
+  { key: 'lambda',   title: 'Λ Coefficient', encodedField: null,                               rawField: 'Lambda', fixedOptions: ['0','nzr'] }
 ];
 
 
@@ -1337,74 +1275,36 @@ const FILTER_CATEGORIES = [
 
 let TEX_METRICS = [];
 
-function inferMetricDiagonalType(tex) {
-  if (!tex || !tex.trim()) return 'Non-diagonal';
-  const compact = tex
-    .replace(/\s+/g, '')
-    .replace(/\\left|\\right|\\bigl|\\bigr|\\Bigl|\\Bigr|\\!|\\,|\\;|\\:/g, '');
-  const diffToken = 'd(?:\\\\bar\\{\\\\?[A-Za-z]+\\}|\\\\?[A-Za-z]+|[A-Za-z]+)';
-  const normalizeDiff = part => part.replace(/^d/, '').replace(/\\bar\{/g, 'bar_').replace(/[{}\\]/g, '');
-
-  const directProducts = compact.matchAll(new RegExp(`(${diffToken})(?:[([{])?(${diffToken})`, 'g'));
-  for (const match of directProducts) {
-    if (normalizeDiff(match[1]) !== normalizeDiff(match[2])) return 'Non-diagonal';
-  }
-
-  const squaredGroups = compact.matchAll(/[\(\[]([^\)\]]+)[\)\]]\^\{?2\}?/g);
-  for (const match of squaredGroups) {
-    const diffs = [...match[1].matchAll(new RegExp(diffToken, 'g'))].map(item => normalizeDiff(item[0]));
-    if (new Set(diffs).size > 1) return 'Non-diagonal';
-  }
-
-  return 'Diagonal';
-}
-
-function prepareRows(rows) {
-  TEX_METRICS = rows.map(m => String(m['Metric_LaTeX'] || ''));
-  rows.forEach((m, index) => {
-    delete m['Metric_LaTeX'];
-    if (m['Source (T_munu)'] !== undefined && m['Source (T_μν)'] === undefined) {
-      m['Source (T_μν)'] = m['Source (T_munu)'];
-      delete m['Source (T_munu)'];
-    }
-    if (m['Source (T_munu) (Label Encoded)'] !== undefined && m['Source (T_μν) (Label Encoded)'] === undefined) {
-      m['Source (T_μν) (Label Encoded)'] = m['Source (T_munu) (Label Encoded)'];
-      delete m['Source (T_munu) (Label Encoded)'];
-    }
-    Object.keys(m).forEach(k => { m[k] = String(m[k]); });
-    m['Metric Diagonal Type'] = inferMetricDiagonalType(TEX_METRICS[index]);
-  });
-  allMetrics = rows.filter(m => m['Equation Number'] || m['Equation Name']);
-  document.getElementById('stat-metrics').textContent = allMetrics.length;
-  buildFilterOptions();
-  applyFilters();
-  renderHeroEquations();
-}
-
-function showLoadingError(message) {
-  const loading = document.getElementById('loading');
-  const actions = document.getElementById('loading-actions');
-  loading.querySelector('.spinner').style.display = 'none';
-  loading.querySelector('.loading-text').innerHTML = `<div class="loading-error">${message}</div>`;
-  actions.style.display = 'flex';
-}
-
-async function loadWorkbookFromArrayBuffer(buf) {
-  const wb = XLSX.read(buf, { type: 'array' });
-  const ws = wb.Sheets[wb.SheetNames[0]];
-  const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
-  prepareRows(rows);
-}
-
 async function init() {
   try {
     const resp = await fetch('metricv1.xlsx');
     if (!resp.ok) throw new Error('Failed to load xlsx (HTTP ' + resp.status + ')');
     const buf = await resp.arrayBuffer();
-    await loadWorkbookFromArrayBuffer(buf);
+    const wb = XLSX.read(buf, { type: 'array' });
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+
+    TEX_METRICS = rows.map(m => String(m['Metric_LaTeX'] || ''));
+    rows.forEach(m => {
+      delete m['Metric_LaTeX'];
+      if (m['Source (T_munu)'] !== undefined && m['Source (T_μν)'] === undefined) {
+        m['Source (T_μν)'] = m['Source (T_munu)'];
+        delete m['Source (T_munu)'];
+      }
+      if (m['Source (T_munu) (Label Encoded)'] !== undefined && m['Source (T_μν) (Label Encoded)'] === undefined) {
+        m['Source (T_μν) (Label Encoded)'] = m['Source (T_munu) (Label Encoded)'];
+        delete m['Source (T_munu) (Label Encoded)'];
+      }
+      Object.keys(m).forEach(k => { m[k] = String(m[k]); });
+    });
+    allMetrics = rows.filter(m => m['Equation Number'] || m['Equation Name']);
+    document.getElementById('stat-metrics').textContent = allMetrics.length;
+    buildFilterOptions();
+    applyFilters();
+    renderHeroEquations();
   } catch (e) {
     console.error('Failed to load data:', e);
-    showLoadingError('Failed to load metrics data automatically.<br><small>' + escapeHTML(e.message) + '</small><br><small>If you opened this page directly from your computer, choose the local <code>.xlsx</code> file below.</small>');
+    document.getElementById('loading').innerHTML = '<div style="color:var(--rose)">Failed to load metrics data.<br><small>' + e.message + '</small></div>';
   }
 }
 
@@ -1594,7 +1494,7 @@ function renderTable() {
   }
 
   tbody.innerHTML = pageData.map((m, i) => `
-    <tr tabindex="0" role="button" aria-label="Open details for ${escapeHTML((m['Equation Name'] || m['Equation Number'] || 'metric').replace(/"/g, '&quot;'))}" data-index="${start + i}" onclick="openDetail(${start + i})">
+    <tr onclick="openDetail(${start + i})">
       <td>${m['Kank'] || (start + i + 1)}</td>
       <td>
         <div class="eq-name">${m['Equation Name'] ? toMath(escapeHTML(m['Equation Name'])) : ''}</div>
@@ -1732,7 +1632,6 @@ function openDetail(index) {
 
   const overlay = document.getElementById('detail-modal');
   const content = document.getElementById('detail-modal-content');
-  lastFocusedElement = document.activeElement;
 
   const weylComps = WEYL_FIELDS.map(f => {
     const v = formatValue(m[f]);
@@ -1771,10 +1670,10 @@ function openDetail(index) {
   content.innerHTML = `
     <div class="modal-head">
       <div>
-        <div class="modal-title" id="detail-modal-title">${m['Equation Name'] ? toMath(escapeHTML(m['Equation Name'])) : ''}</div>
+        <div class="modal-title">${m['Equation Name'] ? toMath(escapeHTML(m['Equation Name'])) : ''}</div>
         <div class="modal-eq-num">Equation ${escapeHTML(m['Equation Number'] || '—')}</div>
       </div>
-      <button class="modal-close" type="button" aria-label="Close details" onclick="closeDetail()">&times;</button>
+      <button class="modal-close" onclick="closeDetail()">&times;</button>
     </div>
     <div class="modal-body">
       <div class="modal-section" id="metric-tex-section" style="${texStr ? '' : 'display:none'}">
@@ -1836,9 +1735,7 @@ function openDetail(index) {
   `;
 
   overlay.classList.add('show');
-  overlay.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
-  content.focus();
 
   if (texStr && typeof katex !== 'undefined') {
     try {
@@ -1856,11 +1753,8 @@ function openDetail(index) {
 }
 
 function closeDetail() {
-  const overlay = document.getElementById('detail-modal');
-  overlay.classList.remove('show');
-  overlay.setAttribute('aria-hidden', 'true');
+  document.getElementById('detail-modal').classList.remove('show');
   document.body.style.overflow = '';
-  if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') lastFocusedElement.focus();
 }
 
 /* ═══════════════════════ ATTRIBUTE FILTER MODAL ═══════════════════════ */
@@ -1870,7 +1764,6 @@ let tempAttrFilters = {};
 function openAttrModal(group) {
   currentAttrGroup = group;
   tempAttrFilters = JSON.parse(JSON.stringify(attrFilters[group]));
-  lastFocusedElement = document.activeElement;
 
   let fields;
   let title;
@@ -1896,8 +1789,8 @@ function openAttrModal(group) {
 
   content.innerHTML = `
     <div class="modal-head">
-      <div class="modal-title" id="attr-modal-title" style="font-size:1.1rem;">${title}</div>
-      <button class="modal-close" type="button" aria-label="Close attribute filters" onclick="closeAttrModal()">&times;</button>
+      <div class="modal-title" style="font-size:1.1rem;">${title}</div>
+      <button class="modal-close" onclick="closeAttrModal()">&times;</button>
     </div>
     <div class="modal-body">${groups}</div>
     <div class="attr-modal-actions">
@@ -1907,8 +1800,6 @@ function openAttrModal(group) {
   `;
 
   overlay.classList.add('show');
-  overlay.setAttribute('aria-hidden', 'false');
-  content.focus();
 }
 
 function toggleAttrVal(btn) {
@@ -1940,10 +1831,7 @@ function resetAttrFilters() {
 }
 
 function closeAttrModal() {
-  const overlay = document.getElementById('attr-modal');
-  overlay.classList.remove('show');
-  overlay.setAttribute('aria-hidden', 'true');
-  if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') lastFocusedElement.focus();
+  document.getElementById('attr-modal').classList.remove('show');
 }
 
 /* ═══════════════════════ NAVIGATION ═══════════════════════ */
@@ -1962,27 +1850,6 @@ function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
 }
 
-function getFocusableElements(container) {
-  return Array.from(container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'))
-    .filter(el => !el.disabled && el.offsetParent !== null);
-}
-
-function trapFocus(event, container) {
-  if (event.key !== 'Tab') return;
-  const focusable = getFocusableElements(container);
-  if (focusable.length === 0) return;
-  const first = focusable[0];
-  const last = focusable[focusable.length - 1];
-
-  if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault();
-    last.focus();
-  } else if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault();
-    first.focus();
-  }
-}
-
 /* Close modals on overlay click */
 document.getElementById('detail-modal').addEventListener('click', function(e) {
   if (e.target === this) closeDetail();
@@ -1993,37 +1860,9 @@ document.getElementById('attr-modal').addEventListener('click', function(e) {
 
 /* ESC key */
 document.addEventListener('keydown', function(e) {
-  if (document.getElementById('detail-modal').classList.contains('show')) {
-    trapFocus(e, document.getElementById('detail-modal-content'));
-  } else if (document.getElementById('attr-modal').classList.contains('show')) {
-    trapFocus(e, document.getElementById('attr-modal-content'));
-  }
-
   if (e.key === 'Escape') {
     closeDetail();
     closeAttrModal();
-  }
-});
-
-document.getElementById('table-body').addEventListener('keydown', function(e) {
-  const row = e.target.closest('tr[data-index]');
-  if (!row) return;
-  if (e.key === 'Enter' || e.key === ' ') {
-    e.preventDefault();
-    openDetail(Number(row.dataset.index));
-  }
-});
-
-document.getElementById('xlsx-input').addEventListener('change', async function(e) {
-  const file = e.target.files && e.target.files[0];
-  if (!file) return;
-  try {
-    const buf = await file.arrayBuffer();
-    await loadWorkbookFromArrayBuffer(buf);
-    showApp();
-  } catch (err) {
-    console.error('Failed to load selected file:', err);
-    showLoadingError('The selected file could not be parsed.<br><small>' + escapeHTML(err.message) + '</small>');
   }
 });
 
