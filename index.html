@@ -242,6 +242,9 @@ html[data-theme="light"] .hero-eq { color: rgba(180,83,9,0.55); }
 .inline-katex .katex {
   font-size: 1em;
 }
+.inline-katex .katex-html {
+  line-height: 1;
+}
 
 @keyframes fadeUp {
   from { opacity:0; transform: translateY(20px); }
@@ -884,10 +887,12 @@ tbody tr:hover .row-arrow { color: var(--accent); transform: translateX(3px); }
 }
 
 .comp-label {
-  font-family: 'Cambria Math', 'STIX Two Math', 'Latin Modern Math', 'Times New Roman', Georgia, serif;
   font-size: 1rem;
   color: var(--text-dim);
   letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.2rem;
 }
 
 .comp-label i {
@@ -903,10 +908,12 @@ tbody tr:hover .row-arrow { color: var(--accent); transform: translateX(3px); }
 }
 
 .attr-group-title {
-  font-family: 'Cambria Math', 'STIX Two Math', 'Latin Modern Math', 'Times New Roman', Georgia, serif;
   font-size: 1.05rem;
   color: var(--text);
   margin-bottom: 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.35rem;
 }
 
 .attr-group-title i {
@@ -919,6 +926,22 @@ tbody tr:hover .row-arrow { color: var(--accent); transform: translateX(3px); }
   line-height: 0;
   position: relative;
   top: 0.1em;
+}
+
+.comp-label .inline-katex,
+.attr-group-title .inline-katex {
+  display: inline-flex;
+  align-items: center;
+}
+
+.comp-label .katex,
+.attr-group-title .katex {
+  font-size: 1.05em;
+  line-height: 1;
+}
+
+.attr-group-title .katex {
+  font-size: 1.12em;
 }
 
 .comp-value {
@@ -1614,6 +1637,7 @@ function escapeAttr(s) { return s.replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 function escapeHTML(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 const LOCAL_FILES_BASES = ['metric-file', 'metric-files'];
+const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/sudesb/metric-viewer/main/metric-file/';
 
 function resolveResourceHref(...candidates) {
   const raw = candidates.find(v => typeof v === 'string' && v.trim());
@@ -1621,8 +1645,13 @@ function resolveResourceHref(...candidates) {
   const v = raw.trim();
   if (/^https?:\/\//i.test(v)) return v;
   const cleaned = v.replace(/^\.?\//, '');
-  if (cleaned.includes('/')) return encodeURI(cleaned);
-  return encodeURI(LOCAL_FILES_BASES[0] + '/' + cleaned);
+  if (cleaned.includes('/')) {
+    if (cleaned.startsWith('metric-file/') || cleaned.startsWith('metric-files/')) {
+      return encodeURI(GITHUB_RAW_BASE + cleaned.replace(/^metric-files?\//, ''));
+    }
+    return encodeURI(cleaned);
+  }
+  return encodeURI(GITHUB_RAW_BASE + cleaned);
 }
 
 function resolvePdfHref(...candidates) {
@@ -1631,8 +1660,13 @@ function resolvePdfHref(...candidates) {
   const v = raw.trim();
   if (/^https?:\/\//i.test(v)) return v;
   const cleaned = v.replace(/^\.?\//, '');
-  if (cleaned.includes('/')) return encodeURI(cleaned);
-  return encodeURI('metric-file/' + cleaned);
+  if (cleaned.includes('/')) {
+    if (cleaned.startsWith('metric-file/') || cleaned.startsWith('metric-files/')) {
+      return encodeURI(GITHUB_RAW_BASE + cleaned.replace(/^metric-files?\//, ''));
+    }
+    return encodeURI(cleaned);
+  }
+  return encodeURI(GITHUB_RAW_BASE + cleaned);
 }
 
 function isHttpUrl(v) {
