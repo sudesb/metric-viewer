@@ -1172,11 +1172,11 @@ html[data-theme="light"] .btn-primary:hover { background: #b45309; }
       <div class="attr-filters">
         <div class="attr-filters-label">Attribute Filters</div>
         <button class="attr-btn" onclick="openAttrModal('weyl')">
-          <span>Weyl Components (Ψ)</span>
+          <span>Weyl Components (<span class="inline-katex" data-katex="\\Psi">Ψ</span>)</span>
           <span class="attr-badge" id="badge-weyl"></span>
         </button>
         <button class="attr-btn" onclick="openAttrModal('ricci')">
-          <span>Ricci Components (Φ)</span>
+          <span>Ricci Components (<span class="inline-katex" data-katex="\\Phi">Φ</span>)</span>
           <span class="attr-badge" id="badge-ricci"></span>
         </button>
         <button class="attr-btn" onclick="openAttrModal('spin')">
@@ -2399,6 +2399,7 @@ function renderHeroEquations() {
 
 /* ═══════════════════════ START ═══════════════════════ */
 applyTheme(getTheme());
+renderInlineKatex(document.querySelector('.attr-filters'));
 init();
 </script>
 </body>
