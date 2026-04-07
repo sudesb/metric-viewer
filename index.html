@@ -1638,6 +1638,7 @@ function escapeHTML(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
 
 const LOCAL_FILES_BASES = ['metric-file', 'metric-files'];
 const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/sudesb/metric-viewer/main/metric-file/';
+const GITHUB_BLOB_BASE = 'https://github.com/sudesb/metric-viewer/blob/main/metric-file/';
 
 function resolveResourceHref(...candidates) {
   const raw = candidates.find(v => typeof v === 'string' && v.trim());
@@ -1662,11 +1663,11 @@ function resolvePdfHref(...candidates) {
   const cleaned = v.replace(/^\.?\//, '');
   if (cleaned.includes('/')) {
     if (cleaned.startsWith('metric-file/') || cleaned.startsWith('metric-files/')) {
-      return encodeURI(GITHUB_RAW_BASE + cleaned.replace(/^metric-files?\//, ''));
+      return encodeURI(GITHUB_BLOB_BASE + cleaned.replace(/^metric-files?\//, ''));
     }
     return encodeURI(cleaned);
   }
-  return encodeURI(GITHUB_RAW_BASE + cleaned);
+  return encodeURI(GITHUB_BLOB_BASE + cleaned);
 }
 
 function isHttpUrl(v) {
