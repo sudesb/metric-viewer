@@ -1289,23 +1289,21 @@ function fieldSymbol(fieldName) {
 function toMath(text) {
   if (!text) return '';
   if (FIELD_SYMBOLS_TEX[text]) return katexInline(FIELD_SYMBOLS_TEX[text], text);
+  if (text === 'Source (T_μν)') return `Source (${katexInline('T_{\\mu\\nu}', 'T_μν')})`;
+  if (text === 'Cosmological Constant (Λ)') return `Cosmological Constant (${katexInline('\\Lambda', 'Λ')})`;
 
-  let s = text;
+  let s = escapeHTML(text);
+  s = s.replace(/\b([GV])_?(\d+)\b/g, (_, letter, digits) => katexInline(`${letter}_{${digits}}`, `${letter}_${digits}`));
+  s = s.replace(/(^|[\s(])Λ(?=[)\s]|$)/g, (_, prefix) => `${prefix}${katexInline('\\Lambda', 'Λ')}`);
+  return s;
+}
 
-  s = s.replace(/T_?μν/g, () => katexInline('T_{\\mu\\nu}', 'T_μν'));
-  s = s.replace(/\b([GV])_?(\d+)\b/g, (_, letter, digits) => katexInline(`${letter}_{${digits}}`, `${letter}${digits}`));
-  s = s.replace(/\b(Phi|Psi|Lambda|Delta|Omega|Theta)_?(\d+)\b/g, (_, name, digits) => katexInline(`\\${name}_{${digits}}`, `${name}_${digits}`));
-  s = s.replace(/\b(psi|phi|rho|mu|muu|sigma|lambda|alpha|beta|tau|pi|gam|gamma|epsilon|kap|kappa|nu)_?(\d+)\b/g, (_, name, digits) => {
-    const latexName = name === 'muu' ? 'mu' : name === 'gam' ? 'gamma' : name === 'kap' ? 'kappa' : name;
-    return katexInline(`\\${latexName}_{${digits}}`, `${name}_${digits}`);
-  });
-  s = s.replace(/\b(Phi|Psi|Lambda|Delta|Omega|Theta)\b/g, (_, name) => katexInline(`\\${name}`, name));
-  s = s.replace(/\b(psi|phi|rho|mu|muu|sigma|lambda|alpha|beta|tau|pi|gam|gamma|epsilon|kap|kappa|nu)\b/g, (_, name) => {
-    const latexName = name === 'muu' ? 'mu' : name === 'gam' ? 'gamma' : name === 'kap' ? 'kappa' : name;
-    return katexInline(`\\${latexName}`, name);
-  });
-  s = s.replace(/Λ/g, () => katexInline('\\Lambda', 'Λ'));
-
+function formatDisplayText(text) {
+  if (!text) return '';
+  let s = escapeHTML(text);
+  s = s.replace(/T_(?:μν|munu)/g, 'T<sub>μν</sub>');
+  s = s.replace(/\b([GV])_?(\d+)\b/g, '$1<sub>$2</sub>');
+  s = s.replace(/\\?Lambda/g, 'Λ');
   return s;
 }
 
@@ -1845,15 +1843,15 @@ function renderTable() {
     <tr tabindex="0" role="button" aria-label="Open details for ${escapeHTML((m['Equation Name'] || m['Equation Number'] || 'metric').replace(/"/g, '&quot;'))}" data-index="${start + i}" onclick="openDetail(${start + i})">
       <td>${m['Kank'] || (start + i + 1)}</td>
       <td>
-        <div class="eq-name">${m['Equation Name'] ? toMath(escapeHTML(m['Equation Name'])) : ''}</div>
+        <div class="eq-name">${m['Equation Name'] ? formatDisplayText(m['Equation Name']) : ''}</div>
         <div class="eq-number">Eq. ${escapeHTML(m['Equation Number'] || '—')}</div>
       </td>
       <td>${escapeHTML(m['Book'] || '')}</td>
       <td>${escapeHTML(m['Page Number'] || '')}</td>
-      <td><span class="weyl-badge ${weylClass(m['Weyl'])}">${toMath(escapeHTML(m['Weyl'] || '—'))}</span></td>
-      <td>${toMath(escapeHTML(m['Symmetry'] || '—'))}</td>
-      <td class="source-tag">${toMath(escapeHTML(m['Source (T_μν)'] || '—'))}</td>
-      <td>${toMath(escapeHTML(m['Additional Conditions'] || '—'))}</td>
+      <td><span class="weyl-badge ${weylClass(m['Weyl'])}">${formatDisplayText(m['Weyl'] || '—')}</span></td>
+      <td>${formatDisplayText(m['Symmetry'] || '—')}</td>
+      <td class="source-tag">${formatDisplayText(m['Source (T_μν)'] || '—')}</td>
+      <td>${formatDisplayText(m['Additional Conditions'] || '—')}</td>
       <td><span class="row-arrow">›</span></td>
     </tr>
   `).join('');
@@ -2060,14 +2058,14 @@ function openDetail(index) {
   const addCond = m['Additional Conditions'] && m['Additional Conditions'].trim()
     ? `<div class="info-item" style="grid-column: 1 / -1;">
         <div class="info-label">Additional Conditions</div>
-        <div class="info-value">${toMath(escapeHTML(m['Additional Conditions']))}</div>
+        <div class="info-value">${formatDisplayText(m['Additional Conditions'])}</div>
        </div>`
     : '';
 
   content.innerHTML = `
     <div class="modal-head">
       <div>
-        <div class="modal-title" id="detail-modal-title">${m['Equation Name'] ? toMath(escapeHTML(m['Equation Name'])) : ''}</div>
+        <div class="modal-title" id="detail-modal-title">${m['Equation Name'] ? formatDisplayText(m['Equation Name']) : ''}</div>
         <div class="modal-eq-num">Equation ${escapeHTML(m['Equation Number'] || '—')}</div>
       </div>
       <button class="modal-close" type="button" aria-label="Close details" onclick="closeDetail()">&times;</button>
@@ -2091,15 +2089,15 @@ function openDetail(index) {
           </div>
           <div class="info-item">
             <div class="info-label">Weyl Type</div>
-            <div class="info-value"><span class="weyl-badge ${weylClass(m['Weyl'])}">${toMath(escapeHTML(m['Weyl'] || '—'))}</span></div>
+            <div class="info-value"><span class="weyl-badge ${weylClass(m['Weyl'])}">${formatDisplayText(m['Weyl'] || '—')}</span></div>
           </div>
           <div class="info-item">
             <div class="info-label">Symmetry</div>
-            <div class="info-value">${toMath(escapeHTML(m['Symmetry'] || '—'))}</div>
+            <div class="info-value">${formatDisplayText(m['Symmetry'] || '—')}</div>
           </div>
           <div class="info-item">
             <div class="info-label">Source (T<sub>μν</sub>)</div>
-            <div class="info-value">${toMath(escapeHTML(m['Source (T_μν)'] || '—'))}</div>
+            <div class="info-value">${formatDisplayText(m['Source (T_μν)'] || '—')}</div>
           </div>
           ${addCond}
         </div>
