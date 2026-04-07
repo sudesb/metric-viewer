@@ -235,6 +235,13 @@ html[data-theme="light"] .hero-btn:hover {
 }
 html[data-theme="light"] .hero-eq { color: rgba(180,83,9,0.55); }
 .hero-eq .katex { color: inherit; }
+.inline-katex {
+  display: inline-block;
+  vertical-align: middle;
+}
+.inline-katex .katex {
+  font-size: 1em;
+}
 
 @keyframes fadeUp {
   from { opacity:0; transform: translateY(20px); }
@@ -1240,57 +1247,65 @@ const GREEK = {
 const SUBSCRIPTS = {'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉'};
 const SUPERSCRIPTS = {'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
 
-const FIELD_SYMBOLS = {
-  'psi_0':'Ψ<sub>0</sub>', 'psi_1':'Ψ<sub>1</sub>', 'psi_2':'Ψ<sub>2</sub>', 'psi_3':'Ψ<sub>3</sub>', 'psi_4':'Ψ<sub>4</sub>',
-  'Phi_00':'Φ<sub>00</sub>', 'Phi_11':'Φ<sub>11</sub>', 'Phi_22':'Φ<sub>22</sub>',
-  'Phi_01':'Φ<sub>01</sub>', 'Phi_10':'Φ<sub>10</sub>', 'Phi_02':'Φ<sub>02</sub>', 'Phi_20':'Φ<sub>20</sub>', 'Phi_12':'Φ<sub>12</sub>', 'Phi_21':'Φ<sub>21</sub>',
-  'Lambda':'Λ',
-  'rho':'ρ', 'muu':'μ', 'sigma':'σ', 'lambda':'λ',
-  'alpha':'α', 'beta':'β', 'tau':'τ', 'pi':'π',
-  'gam':'γ', 'epsilon':'ε', 'kap':'κ', 'nu':'ν'
+const FIELD_SYMBOLS_TEX = {
+  'psi_0':'\\Psi_0', 'psi_1':'\\Psi_1', 'psi_2':'\\Psi_2', 'psi_3':'\\Psi_3', 'psi_4':'\\Psi_4',
+  'Phi_00':'\\Phi_{00}', 'Phi_11':'\\Phi_{11}', 'Phi_22':'\\Phi_{22}',
+  'Phi_01':'\\Phi_{01}', 'Phi_10':'\\Phi_{10}', 'Phi_02':'\\Phi_{02}', 'Phi_20':'\\Phi_{20}', 'Phi_12':'\\Phi_{12}', 'Phi_21':'\\Phi_{21}',
+  'Lambda':'\\Lambda',
+  'rho':'\\rho', 'muu':'\\mu', 'sigma':'\\sigma', 'lambda':'\\lambda',
+  'alpha':'\\alpha', 'beta':'\\beta', 'tau':'\\tau', 'pi':'\\pi',
+  'gam':'\\gamma', 'epsilon':'\\epsilon', 'kap':'\\kappa', 'nu':'\\nu'
 };
 
+function katexInline(tex, fallback = '') {
+  return `<span class="inline-katex" data-katex="${escapeAttr(tex)}">${fallback || escapeHTML(tex)}</span>`;
+}
+
+function renderInlineKatex(root = document) {
+  if (typeof katex === 'undefined') {
+    const scriptEl = document.querySelector('script[src*="katex"]');
+    if (scriptEl && !scriptEl.dataset.inlineKatexHooked) {
+      scriptEl.dataset.inlineKatexHooked = 'true';
+      scriptEl.addEventListener('load', () => renderInlineKatex(document));
+    }
+    return;
+  }
+  root.querySelectorAll('[data-katex]').forEach(el => {
+    const tex = el.getAttribute('data-katex');
+    if (!tex || el.dataset.katexRendered === 'true') return;
+    try {
+      katex.render(tex, el, { throwOnError: false, displayMode: false });
+      el.dataset.katexRendered = 'true';
+    } catch (_) {
+      el.textContent = el.textContent || tex;
+    }
+  });
+}
+
 function fieldSymbol(fieldName) {
-  return FIELD_SYMBOLS[fieldName] || toMath(fieldName);
+  return FIELD_SYMBOLS_TEX[fieldName] ? katexInline(FIELD_SYMBOLS_TEX[fieldName], fieldName) : toMath(fieldName);
 }
 
 function toMath(text) {
   if (!text) return '';
-  if (FIELD_SYMBOLS[text]) return FIELD_SYMBOLS[text];
+  if (FIELD_SYMBOLS_TEX[text]) return katexInline(FIELD_SYMBOLS_TEX[text], text);
+
   let s = text;
 
-  // Greek+subscript combos: epsilon_1 → ε₁, lambda2 → λ₂
-  s = s.replace(/\b(epsilon|lambda|delta|alpha|beta|sigma|gamma|omega|theta|phi|psi|rho|mu|nu|tau|kappa|Lambda|Delta|Omega|Theta|Phi|Psi)_?(\d+)/g, (_, name, digits) => {
-    const greek = GREEK[name] || name;
-    return greek + digits.split('').map(d => SUBSCRIPTS[d] || d).join('');
+  s = s.replace(/T_?μν/g, () => katexInline('T_{\\mu\\nu}', 'T_μν'));
+  s = s.replace(/\b([GV])_?(\d+)\b/g, (_, letter, digits) => katexInline(`${letter}_{${digits}}`, `${letter}${digits}`));
+  s = s.replace(/\b(Phi|Psi|Lambda|Delta|Omega|Theta)_?(\d+)\b/g, (_, name, digits) => katexInline(`\\${name}_{${digits}}`, `${name}_${digits}`));
+  s = s.replace(/\b(psi|phi|rho|mu|muu|sigma|lambda|alpha|beta|tau|pi|gam|gamma|epsilon|kap|kappa|nu)_?(\d+)\b/g, (_, name, digits) => {
+    const latexName = name === 'muu' ? 'mu' : name === 'gam' ? 'gamma' : name === 'kap' ? 'kappa' : name;
+    return katexInline(`\\${latexName}_{${digits}}`, `${name}_${digits}`);
   });
-
-  // Greek letters (longer first to avoid partial matches)
-  const sorted = Object.keys(GREEK).sort((a,b) => b.length - a.length);
-  for (const lat of sorted) {
-    s = s.replace(new RegExp('\\b' + lat + '\\b', 'g'), GREEK[lat]);
-  }
-
-  // Trig/math functions without parens: sinhu → sinh(u), cost → cos(t), expz → exp(z)
-  s = s.replace(/\b(sinh|cosh|tanh|sin|cos|tan|exp)([a-zA-Zλεδαβγσμνρτπκφψθωξζ])(?![a-zA-Z(])/g, (_, fn, arg) => {
-    return fn + '(' + arg + ')';
+  s = s.replace(/\b(Phi|Psi|Lambda|Delta|Omega|Theta)\b/g, (_, name) => katexInline(`\\${name}`, name));
+  s = s.replace(/\b(psi|phi|rho|mu|muu|sigma|lambda|alpha|beta|tau|pi|gam|gamma|epsilon|kap|kappa|nu)\b/g, (_, name) => {
+    const latexName = name === 'muu' ? 'mu' : name === 'gam' ? 'gamma' : name === 'kap' ? 'kappa' : name;
+    return katexInline(`\\${latexName}`, name);
   });
+  s = s.replace(/Λ/g, () => katexInline('\\Lambda', 'Λ'));
 
-  // Superscripts: u^-2p → u<sup>-2p</sup>, e^2 → e<sup>2</sup>
-  s = s.replace(/\^(-?[\w]+)/g, '<sup>$1</sup>');
-
-  // Subscripts: x_01 → x₀₁, G_6 → G₆
-  s = s.replace(/(\w)_(\d+)/g, (_, pre, digits) => {
-    return pre + digits.split('').map(d => SUBSCRIPTS[d] || d).join('');
-  });
-  // Subscripts with Greek letters: T_μν → T<sub>μν</sub>
-  s = s.replace(/(\w)_([μνρσλαβγδεζηθκξπτφχψωΨΦ]+)/g, (_, pre, letters) => {
-    return pre + '<sub>' + letters + '</sub>';
-  });
-  // G3, G6 etc. without underscore
-  s = s.replace(/\bG(\d+)\b/g, (_, d) => 'G' + d.split('').map(c => SUBSCRIPTS[c] || c).join(''));
-  // V_4 etc.
-  s = s.replace(/\bV(\d+)\b/g, (_, d) => 'V' + d.split('').map(c => SUBSCRIPTS[c] || c).join(''));
   return s;
 }
 
@@ -1382,7 +1397,6 @@ const filters = {
   weyl: [],
   symmetry: [],
   source: [],
-  lambda: [],
   diagonal: []
 };
 
@@ -1408,7 +1422,7 @@ function normalizeWeyl(val) {
   return s;
 }
 
-const SOURCE_TYPES = ['Vacuum', 'Einstein-Maxwell', 'Perfect Fluid', 'Dust', 'Radiation', 'Anisotropic Fluid', 'Anisotropic Matter', 'Λ-term'];
+const SOURCE_TYPES = ['Vacuum', 'Einstein-Maxwell', 'Perfect Fluid', 'Dust', 'Radiation', 'Anisotropic Fluid', 'Anisotropic Matter', 'Cosmological Constant (Λ)'];
 const DIAGONAL_TYPES = ['Diagonal', 'Non-diagonal'];
 
 function normalizeSource(val) {
@@ -1418,9 +1432,10 @@ function normalizeSource(val) {
   s = s.replace(/Einstein\s+Maxwell/gi, 'Einstein-Maxwell');
   s = s.replace(/\\?Lambda/g, 'Λ');
   if (/^Perfect\s+fluid$/i.test(s)) return ['Perfect Fluid'];
-  if (/Perfect\s+Fluid\s*\+\s*Λ/i.test(s)) return ['Perfect Fluid', 'Λ-term'];
-  if (/Radiation\s*\+?\s*Λ/i.test(s)) return ['Radiation', 'Λ-term'];
-  if (/^Λ[\s-]*[Tt]erm$/i.test(s)) return ['Λ-term'];
+  if (/Perfect\s+Fluid\s*\+\s*Λ/i.test(s)) return ['Perfect Fluid', 'Cosmological Constant (Λ)'];
+  if (/Radiation\s*\+?\s*Λ/i.test(s)) return ['Radiation', 'Cosmological Constant (Λ)'];
+  if (/^Λ[\s-]*[Tt]erm$/i.test(s)) return ['Cosmological Constant (Λ)'];
+  if (/^Cosmological\s+Constant\s*\(?(?:Λ|Lambda)\)?$/i.test(s)) return ['Cosmological Constant (Λ)'];
   if (/Einstein-Maxwell\s+or\s+Radiation/i.test(s)) return ['Einstein-Maxwell', 'Radiation'];
   return [s];
 }
@@ -1453,7 +1468,6 @@ const FILTER_CATEGORIES = [
   { key: 'weyl',     title: 'Weyl Type',    encodedField: 'Weyl (Label Encoded)',              rawField: 'Weyl', fixedOptions: WEYL_TYPES, normalize: normalizeWeyl },
   { key: 'symmetry', title: 'Symmetry',     encodedField: 'Symmetry (Label Encoded)',          rawField: 'Symmetry', fixedOptions: SYMMETRY_TYPES, normalize: normalizeSymmetry },
   { key: 'source',   title: 'Source (T_μν)', encodedField: 'Source (T_μν) (Label Encoded)',  rawField: 'Source (T_μν)', fixedOptions: SOURCE_TYPES, normalize: normalizeSource },
-  { key: 'lambda',   title: 'Λ Coefficient', encodedField: null,                               rawField: 'Lambda', fixedOptions: ['0','nzr'] },
   { key: 'diagonal', title: 'Metric Form', encodedField: null, rawField: 'Metric Diagonal Type', fixedOptions: DIAGONAL_TYPES }
 ];
 
@@ -1563,6 +1577,8 @@ function buildFilterOptions() {
     `;
     container.appendChild(section);
   }
+
+  renderInlineKatex(container);
 }
 
 function getUniqueValues(cat) {
@@ -1841,6 +1857,8 @@ function renderTable() {
       <td><span class="row-arrow">›</span></td>
     </tr>
   `).join('');
+
+  renderInlineKatex(tbody);
 }
 
 /* ═══════════════════════ PAGINATION ═══════════════════════ */
@@ -1921,6 +1939,7 @@ function renderChips() {
 
   container.innerHTML = chips.join('');
   container.style.display = chips.length ? 'flex' : 'none';
+  renderInlineKatex(container);
 }
 
 function updateBadges() {
@@ -2115,6 +2134,7 @@ function openDetail(index) {
   overlay.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
   content.focus();
+  renderInlineKatex(content);
 
   if (texStr && typeof katex !== 'undefined') {
     try {
@@ -2151,7 +2171,7 @@ function openAttrModal(group) {
   let fields;
   let title;
   if (group === 'weyl') { fields = WEYL_FIELDS; title = 'Weyl Components (Ψ)'; }
-  else if (group === 'ricci') { fields = RICCI_FIELDS; title = 'Ricci Components (Φ)'; }
+  else if (group === 'ricci') { fields = [...RICCI_FIELDS, 'Lambda']; title = 'Ricci Components (Φ)'; }
   else { fields = SPIN_FIELDS; title = 'Spin Coefficients'; }
 
   const overlay = document.getElementById('attr-modal');
@@ -2185,6 +2205,7 @@ function openAttrModal(group) {
   overlay.classList.add('show');
   overlay.setAttribute('aria-hidden', 'false');
   content.focus();
+  renderInlineKatex(content);
 }
 
 function toggleAttrVal(btn) {
