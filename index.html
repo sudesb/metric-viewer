@@ -1261,6 +1261,17 @@ function katexInline(tex, fallback = '') {
   return `<span class="inline-katex" data-katex="${escapeAttr(tex)}">${fallback || escapeHTML(tex)}</span>`;
 }
 
+function texInlineFromCell(text) {
+  if (!text) return '';
+  let tex = String(text).trim();
+  if (tex.startsWith('$') && tex.endsWith('$') && tex.length >= 2) {
+    tex = tex.slice(1, -1).trim();
+  } else if (tex.startsWith('\\(') && tex.endsWith('\\)')) {
+    tex = tex.slice(2, -2).trim();
+  }
+  return katexInline(tex, String(text));
+}
+
 function renderInlineKatex(root = document) {
   if (typeof katex === 'undefined') {
     const scriptEl = document.querySelector('script[src*="katex"]');
@@ -1851,7 +1862,7 @@ function renderTable() {
       <td><span class="weyl-badge ${weylClass(m['Weyl'])}">${formatDisplayText(m['Weyl'] || '—')}</span></td>
       <td>${formatDisplayText(m['Symmetry'] || '—')}</td>
       <td class="source-tag">${formatDisplayText(m['Source (T_μν)'] || '—')}</td>
-      <td>${formatDisplayText(m['Additional Conditions'] || '—')}</td>
+      <td>${m['Additional Conditions'] ? texInlineFromCell(m['Additional Conditions']) : '—'}</td>
       <td><span class="row-arrow">›</span></td>
     </tr>
   `).join('');
@@ -2058,7 +2069,7 @@ function openDetail(index) {
   const addCond = m['Additional Conditions'] && m['Additional Conditions'].trim()
     ? `<div class="info-item" style="grid-column: 1 / -1;">
         <div class="info-label">Additional Conditions</div>
-        <div class="info-value">${formatDisplayText(m['Additional Conditions'])}</div>
+        <div class="info-value">${texInlineFromCell(m['Additional Conditions'])}</div>
        </div>`
     : '';
 
