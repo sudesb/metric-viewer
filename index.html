@@ -291,6 +291,36 @@ html[data-theme="light"] .topbar {
   flex: 1;
 }
 
+.topbar-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.topbar-tab {
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.topbar-tab:hover { color: var(--text); }
+
+.topbar-tab.active {
+  background: var(--accent);
+  color: var(--bg-deep);
+}
+
 .topbar-count {
   font-family: var(--font-mono);
   font-size: 0.85rem;
@@ -331,6 +361,8 @@ html[data-theme="light"] .topbar {
     transition: left 0.3s ease; width: 320px; }
   .sidebar.open { left: 0; box-shadow: 20px 0 60px rgba(0,0,0,0.5); }
   .mobile-filter-toggle { display: flex !important; }
+  .topbar { flex-wrap: wrap; }
+  .topbar-nav { order: 5; width: 100%; justify-content: center; }
 }
 
 /* ═══════════════════════ SIDEBAR / FILTERS ═══════════════════════ */
@@ -567,6 +599,341 @@ html[data-theme="light"] .chip { border: 1px solid rgba(180,83,9,0.22); }
 .main-content {
   padding: 1.2rem;
   overflow-x: auto;
+}
+
+.instructions-view {
+  display: none;
+  padding: 1.5rem;
+}
+
+.instructions-shell {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.instructions-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 1.6rem;
+  margin-bottom: 1.25rem;
+  background:
+    radial-gradient(circle at top left, rgba(96,165,250,0.12), transparent 35%),
+    linear-gradient(135deg, var(--bg-surface), var(--bg-card));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+html[data-theme="light"] .instructions-hero {
+  background:
+    radial-gradient(circle at top left, rgba(180,83,9,0.14), transparent 35%),
+    linear-gradient(135deg, var(--bg-surface), var(--bg-card));
+}
+
+.instructions-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+
+.instructions-title {
+  font-family: var(--font-body);
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1.1;
+  margin-bottom: 0.8rem;
+}
+
+.instructions-desc {
+  max-width: 720px;
+  color: var(--text-dim);
+  font-size: 1rem;
+}
+
+.instructions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.instruction-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.3rem;
+}
+
+.instruction-card h3 {
+  font-family: var(--font-body);
+  font-size: 1.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.instruction-card p {
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
+.instruction-card ul {
+  padding-left: 1rem;
+  color: var(--text-dim);
+}
+
+.instruction-card li + li {
+  margin-top: 0.6rem;
+}
+
+.instruction-note {
+  margin-top: 1rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(96,165,250,0.06);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+html[data-theme="light"] .instruction-note {
+  background: rgba(180,83,9,0.08);
+}
+
+@media (max-width: 1100px) {
+  .instructions-grid { grid-template-columns: 1fr; }
+}
+
+/* ─── Instructions two-pane layout ─── */
+.instructions-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.instructions-sidebar {
+  position: sticky;
+  top: 70px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.instructions-sidebar-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.4rem 0.7rem 0.5rem;
+}
+
+.instructions-tab {
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 0.55rem 0.8rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.instructions-tab:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+.instructions-tab.active {
+  background: var(--accent-glow);
+  border-color: rgba(96,165,250,0.25);
+  color: var(--accent);
+}
+
+html[data-theme="light"] .instructions-tab.active {
+  border-color: rgba(180,83,9,0.28);
+  color: var(--accent);
+}
+
+.instructions-tab-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.55;
+  flex-shrink: 0;
+}
+
+.instructions-content {
+  min-width: 0;
+}
+
+.instructions-panel {
+  display: none;
+}
+
+.instructions-panel.active {
+  display: block;
+  animation: fadeUp 0.35s ease;
+}
+
+.instructions-panel h2.panel-title {
+  font-family: var(--font-body);
+  font-size: clamp(1.6rem, 2.4vw, 2.3rem);
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.instructions-panel .panel-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.55rem;
+}
+
+.instructions-panel .panel-lead {
+  color: var(--text-dim);
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 760px;
+  margin-bottom: 1.25rem;
+}
+
+.instructions-panel .panel-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.3rem 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.instructions-panel .panel-card h3 {
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.instructions-panel .panel-card p,
+.instructions-panel .panel-card li {
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+.instructions-panel .panel-card ul {
+  padding-left: 1.1rem;
+}
+
+.instructions-panel .panel-card li + li {
+  margin-top: 0.55rem;
+}
+
+.instructions-panel .panel-note {
+  margin-top: 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(96,165,250,0.06);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+html[data-theme="light"] .instructions-panel .panel-note {
+  background: rgba(180,83,9,0.08);
+}
+
+.contributors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.8rem;
+}
+
+.panel-card pre.code-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 0.9rem;
+  margin: 0.7rem 0;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--text);
+  white-space: pre;
+}
+
+.panel-card code.inline-code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.05rem 0.35rem;
+  color: var(--text);
+}
+
+.panel-card h4 {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 1rem 0 0.4rem;
+}
+
+.paper-entry {
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed var(--border);
+}
+.paper-entry:last-child { border-bottom: none; }
+.paper-entry .paper-title {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+.paper-entry .paper-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.contributor-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.1rem;
+}
+
+.contributor-name {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+
+.contributor-role {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+}
+
+@media (max-width: 900px) {
+  .instructions-layout { grid-template-columns: 1fr; }
+  .instructions-sidebar { position: static; flex-direction: row; flex-wrap: wrap; }
+  .instructions-sidebar-title { width: 100%; }
 }
 
 .table-wrap {
@@ -1149,6 +1516,10 @@ html[data-theme="light"] .btn-primary:hover { background: #b45309; }
       Filters
     </button>
     <div class="topbar-title">Metrics Database</div>
+    <div class="topbar-nav" role="tablist" aria-label="Application views">
+      <button class="topbar-tab active" id="tab-database" type="button" onclick="setAppTab('database')" aria-selected="true">Database</button>
+      <button class="topbar-tab" id="tab-instructions" type="button" onclick="setAppTab('instructions')" aria-selected="false">Instructions</button>
+    </div>
     <button class="theme-toggle" id="theme-toggle" type="button" onclick="toggleTheme()" aria-label="Toggle theme">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M3 12h2M19 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
@@ -1220,6 +1591,466 @@ html[data-theme="light"] .btn-primary:hover { background: #b45309; }
       </div>
     </main>
   </div>
+
+  <section class="instructions-view" id="instructions-view" aria-labelledby="instructions-page-title">
+    <div class="instructions-shell">
+      <div class="instructions-layout">
+
+        <!-- Left side tabs -->
+        <aside class="instructions-sidebar" role="tablist" aria-label="Instructions sections">
+          <div class="instructions-sidebar-title" id="instructions-page-title">Sections</div>
+          <button class="instructions-tab active" type="button" role="tab" aria-selected="true"
+                  data-ins-tab="about" onclick="setInstructionsTab('about')">
+            <span class="instructions-tab-dot"></span>About
+          </button>
+          <button class="instructions-tab" type="button" role="tab" aria-selected="false"
+                  data-ins-tab="npformalism" onclick="setInstructionsTab('npformalism')">
+            <span class="instructions-tab-dot"></span>NP Formalism
+          </button>
+          <button class="instructions-tab" type="button" role="tab" aria-selected="false"
+                  data-ins-tab="tetrad" onclick="setInstructionsTab('tetrad')">
+            <span class="instructions-tab-dot"></span>Tetrad Choice
+          </button>
+          <button class="instructions-tab" type="button" role="tab" aria-selected="false"
+                  data-ins-tab="sagemath" onclick="setInstructionsTab('sagemath')">
+            <span class="instructions-tab-dot"></span>Using SageMath and SageNP
+          </button>
+          <button class="instructions-tab" type="button" role="tab" aria-selected="false"
+                  data-ins-tab="papers" onclick="setInstructionsTab('papers')">
+            <span class="instructions-tab-dot"></span>Papers
+          </button>
+        </aside>
+
+        <!-- Right content panels -->
+        <div class="instructions-content">
+
+          <!-- ABOUT -->
+          <div class="instructions-panel active" id="ins-panel-about" role="tabpanel" aria-labelledby="ins-tab-about">
+            <div class="panel-eyebrow">About the Database</div>
+            <h2 class="panel-title">Exact Solutions in the Newman–Penrose Formalism</h2>
+            <p class="panel-lead">
+              This project is a curated database of exact solutions of Einstein's field equations, drawn primarily from
+              Stephani <em>et&nbsp;al.</em>, <em>Exact Solutions of Einstein's Field Equations</em> (2nd ed., Cambridge,
+              2003). For each metric we record its classical properties (Weyl type, symmetry group, matter source) and
+              its full Newman–Penrose decomposition — Weyl scalars, Ricci components, the cosmological constant
+              <span class="inline-katex" data-katex="\Lambda">Λ</span>, and the twelve complex spin coefficients.
+            </p>
+
+            <div class="panel-card">
+              <h3>What this database does</h3>
+              <p>
+                For each metric in Stephani's reference, we select a null tetrad adapted to its principal null
+                directions and compute all Newman–Penrose quantities symbolically using SageMath and the
+                <a href="https://pypi.org/project/SageNP/" class="drive-link" target="_blank" rel="noopener">SageNP</a>
+                package. Every entry is stored in a structured, machine-readable format that lets you:
+              </p>
+              <ul>
+                <li>
+                  <strong>Search and filter</strong> across the full catalog by Weyl type, symmetry group,
+                  matter source, and metric form;
+                </li>
+                <li>
+                  <strong>Query NP scalar patterns</strong> — for instance, imposing
+                  <span class="inline-katex" data-katex="\Psi_0 = \Psi_1 = 0"></span>
+                  to isolate algebraically special geometries, or selecting specific vanishing/non-vanishing
+                  Ricci components and spin coefficients;
+                </li>
+                <li>
+                  <strong>Inspect each solution in detail</strong> — view the line element in rendered
+                  <span class="inline-katex" data-katex="\TeX"></span>, the full set of Weyl scalars, Ricci
+                  components, the cosmological scalar
+                  <span class="inline-katex" data-katex="\Lambda"></span>,
+                  and all twelve spin coefficients;
+                </li>
+                <li>
+                  <strong>Download resources</strong> — access the associated SageMath notebook and a
+                  detailed PDF for every entry to reproduce or extend the calculations.
+                </li>
+              </ul>
+            </div>
+
+            <div class="panel-card">
+              <h3>How to use the site</h3>
+              <p>
+                The site is organized into two main views, accessible from any page via the top navigation bar.
+              </p>
+              <ul>
+                <li>
+                  <strong>Database</strong> — the main search interface. Use the left sidebar to narrow results
+                  by Weyl type, symmetry group, matter source, or metric form. For finer control, the
+                  <em>Attribute Filters</em> let you specify exact vanishing/non-vanishing patterns for Weyl
+                  scalars, Ricci components, and spin coefficients. Click any row to open the full detail view
+                  for that metric, which shows the rendered line element, all NP quantities, and links to the
+                  associated SageMath notebook and PDF.
+                </li>
+                <li>
+                  <strong>Instructions</strong> — the section you are reading now. It contains background
+                  material organized into tabs:
+                  <em>NP Formalism</em> for a self-contained introduction to the Newman–Penrose framework,
+                  <em>Tetrad Choice</em> for the conventions used throughout the database,
+                  <em>Using SageMath and SageNP</em> for the computational workflow and code examples, and
+                  <em>Papers</em> for publications produced within this project.
+                </li>
+              </ul>
+            </div>
+
+            <div class="panel-card">
+              <h3>Acknowledgements &amp; Contributors</h3>
+              <p>
+                This work is funded by <strong>TÜBİTAK 1001 Program, Grant Number 123R114</strong>.
+              </p>
+              <p style="margin-top:0.75rem;">
+                <strong>Contributors:</strong> Prof. Dr. Ayşe Hümeyra Bilge, Prof. Dr. Tolga Birkandan, Dr. Gülay Karakaya, Emir Baysazan, Selinay Sude Binici, Merve Yılmaz, Sezin Giravioğlu, Efe Özyürek, Ramazan Gökay Günay, Caner Karaca, Sarp Yılmaz, Şimal Serdaroğlu, Tuba Önen
+              </p>
+            </div>
+          </div>
+
+          <!-- NP FORMALISM -->
+          <div class="instructions-panel" id="ins-panel-npformalism" role="tabpanel" aria-labelledby="ins-tab-npformalism">
+            <div class="panel-eyebrow">Mathematical Framework</div>
+            <h2 class="panel-title">The Newman–Penrose Formalism</h2>
+            <p class="panel-lead">
+              The Newman–Penrose (NP) formalism, introduced by Ezra Newman and Roger Penrose in 1962, is a
+              null-tetrad based spinorial approach to general relativity that replaces the metric tensor with
+              a set of complex scalar quantities — making the structure of Einstein's field equations and the
+              Bianchi identities far more transparent, especially for algebraically special spacetimes.
+            </p>
+
+            <div class="panel-card">
+              <h3>The null tetrad</h3>
+              <p>
+                Instead of working with a coordinate basis, the NP formalism employs four null vector fields
+                — the <em>null tetrad</em>
+                <span class="inline-katex" data-katex="(\ell^\mu,\, n^\mu,\, m^\mu,\, \bar{m}^\mu)"></span>
+                — where <span class="inline-katex" data-katex="\ell"></span> and
+                <span class="inline-katex" data-katex="n"></span> are real null vectors and
+                <span class="inline-katex" data-katex="m,\bar{m}"></span> are complex conjugate null vectors.
+                The only non-vanishing inner products are:
+              </p>
+              <p style="text-align:center; margin: 0.75rem 0;">
+                <span class="inline-katex" data-katex="\ell \cdot n = -1, \qquad m \cdot \bar{m} = +1"></span>
+              </p>
+              <p>
+                The spacetime metric is entirely encoded in the tetrad:
+              </p>
+              <p style="text-align:center; margin: 0.75rem 0;">
+                <span class="inline-katex" data-katex="g_{\mu\nu} = -2\,\ell_{(\mu} n_{\nu)} + 2\,m_{(\mu}\bar{m}_{\nu)}"></span>
+              </p>
+            </div>
+
+            <div class="panel-card">
+              <h3>Spin coefficients</h3>
+              <p>
+                The twelve complex <em>spin coefficients</em> encode the complete connection information of the
+                spacetime relative to the null tetrad. They capture intrinsic geometric properties such as
+                expansion, shear, twist, and acceleration of the null congruences:
+              </p>
+              <ul>
+                <li><span class="inline-katex" data-katex="\kappa, \tau, \sigma, \rho"></span> — properties of the
+                    <span class="inline-katex" data-katex="\ell"></span>-congruence (geodesy, shear, expansion/twist);</li>
+                <li><span class="inline-katex" data-katex="\nu, \pi, \lambda, \mu"></span> — analogous properties of the
+                    <span class="inline-katex" data-katex="n"></span>-congruence;</li>
+                <li><span class="inline-katex" data-katex="\epsilon, \gamma, \alpha, \beta"></span> — relate to the
+                    non-geodesic and non-affine behavior of the tetrad frame.</li>
+              </ul>
+              <p style="margin-top:0.6rem;">
+                A geodesic, shear-free, and twist-free null congruence satisfies
+                <span class="inline-katex" data-katex="\kappa = \sigma = \rho = 0"></span>,
+                which is the starting point for many exact solution techniques.
+              </p>
+            </div>
+
+            <div class="panel-card">
+              <h3>Weyl scalars and Petrov classification</h3>
+              <p>
+                The ten independent components of the Weyl (conformal curvature) tensor are projected onto
+                the null tetrad to yield five complex scalars:
+              </p>
+              <p style="text-align:center; margin: 0.75rem 0;">
+                <span class="inline-katex" data-katex="\Psi_0,\quad\Psi_1,\quad\Psi_2,\quad\Psi_3,\quad\Psi_4"></span>
+              </p>
+              <p>
+                Their vanishing pattern determines the <strong>Petrov type</strong> — an algebraic classification
+                of the gravitational field's tidal structure:
+              </p>
+              <ul>
+                <li><strong>Type I</strong> — general case, all <span class="inline-katex" data-katex="\Psi_i \neq 0"></span>;</li>
+                <li><strong>Type II</strong> — one repeated principal null direction (PND);</li>
+                <li><strong>Type D</strong> — two repeated PNDs; includes Schwarzschild and Kerr;</li>
+                <li><strong>Type III</strong> — one PND with multiplicity 3;</li>
+                <li><strong>Type N</strong> — one PND with multiplicity 4; pure gravitational radiation;</li>
+                <li><strong>Type O</strong> — conformally flat, all <span class="inline-katex" data-katex="\Psi_i = 0"></span>.</li>
+              </ul>
+              <p style="margin-top:0.6rem;">
+                In a tetrad aligned to the principal null directions, the leading non-zero scalar shifts
+                toward <span class="inline-katex" data-katex="\Psi_2"></span> or higher, simplifying the field equations considerably.
+              </p>
+            </div>
+
+            <div class="panel-card">
+              <h3>Ricci components and the field equations</h3>
+              <p>
+                The Ricci tensor — determined by the matter content via Einstein's equations — is decomposed
+                into nine real components
+                <span class="inline-katex" data-katex="\Phi_{AB}"></span>
+                (<span class="inline-katex" data-katex="A,B \in \{0,1,2\}"></span>) and the real cosmological
+                scalar <span class="inline-katex" data-katex="\Lambda"></span>:
+              </p>
+              <p style="text-align:center; margin: 0.75rem 0;">
+                <span class="inline-katex" data-katex="\Phi_{00},\;\Phi_{01},\;\Phi_{02},\;\Phi_{11},\;\Phi_{12},\;\Phi_{22},\;\Lambda"></span>
+              </p>
+              <p>
+                For a vacuum spacetime all <span class="inline-katex" data-katex="\Phi_{AB} = 0"></span> and
+                <span class="inline-katex" data-katex="\Lambda = 0"></span>
+                (or <span class="inline-katex" data-katex="\Lambda \neq 0"></span> with a cosmological constant).
+                The NP field equations — 18 complex equations — together with the 11 Bianchi identities
+                govern the evolution of all these scalars.
+              </p>
+            </div>
+
+            <div class="panel-card">
+              <h3>Why the NP formalism?</h3>
+              <p>
+                The NP framework offers several practical advantages over the coordinate approach:
+              </p>
+              <ul>
+                <li>The algebraic structure of a solution is immediately visible from the vanishing pattern
+                    of the Weyl and Ricci scalars;</li>
+                <li>Peeling properties and gravitational radiation are naturally expressed through
+                    <span class="inline-katex" data-katex="\Psi_4"></span>;</li>
+                <li>Many exact solutions — particularly those of Petrov types D and N — are most easily
+                    derived or classified within this framework;</li>
+                <li>The formalism interfaces cleanly with spinor calculus and twistor theory.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- TETRAD CHOICE -->
+          <div class="instructions-panel" id="ins-panel-tetrad" role="tabpanel" aria-labelledby="ins-tab-tetrad">
+            <div class="panel-eyebrow">Conventions</div>
+            <h2 class="panel-title">Tetrad Choice</h2>
+            <p class="panel-lead">
+              This section describes the tetrad conventions that guide metric entry in the database.
+            </p>
+
+          </div>
+
+          <!-- SAGEMATH -->
+          <div class="instructions-panel" id="ins-panel-sagemath" role="tabpanel" aria-labelledby="ins-tab-sagemath">
+            <div class="panel-eyebrow">Workflow</div>
+            <h2 class="panel-title">Using SageMath and SageNP</h2>
+            <p class="panel-lead">
+              <strong>SageNP</strong> is a Python/SageMath class that performs Newman–Penrose calculations on top of
+              <a href="https://sagemanifolds.obspm.fr/" class="drive-link" target="_blank" rel="noopener">SageManifolds</a>.
+              Every metric in this database has been processed through SageNP; the same workflow reproduces all
+              listed NP quantities. The package is available on PyPI:
+              <a href="https://pypi.org/project/SageNP/" class="drive-link" target="_blank" rel="noopener">pypi.org/project/SageNP</a>
+              and on
+              <a href="https://github.com/tbirkandan/SageNP" class="drive-link" target="_blank" rel="noopener">GitHub</a>.
+            </p>
+
+            <div class="panel-card">
+              <h3>Installation</h3>
+              <pre class="code-block">pip install SageNP</pre>
+            </div>
+
+            <div class="panel-card">
+              <h3>Conventions</h3>
+              <ul>
+                <li>Metric signature: <span class="inline-katex" data-katex="(-,+,+,+)">(−,+,+,+)</span>.</li>
+                <li>Null tetrad labels follow the literature: <code class="inline-code">(l, n, m, mbar)</code>.
+                    In Stephani's book the same vectors are written <code class="inline-code">(k, l, m, mbar)</code>,
+                    so one identifies <code class="inline-code">k → l</code> and <code class="inline-code">l → n</code>
+                    when comparing formulas.</li>
+                <li>Non-vanishing inner products:
+                    <span class="inline-katex" data-katex="\ell \cdot n = -1">ℓ·n = −1</span>,
+                    <span class="inline-katex" data-katex="m \cdot \bar m = 1">m·m̄ = 1</span>,
+                    all others zero.</li>
+                <li>Metric reconstruction from covariant tetrad vectors:
+                    <span class="inline-katex" data-katex="g_{\mu\nu} = -2\,\ell_{(\mu} n_{\nu)} + 2\,m_{(\mu} \bar m_{\nu)}">g = −2 ℓ₍ₘnᵥ₎ + 2 m₍ₘm̄ᵥ₎</span>.</li>
+              </ul>
+            </div>
+
+            <div class="panel-card">
+              <h3>Basic usage</h3>
+              <p>A minimal end-to-end session for the Schwarzschild metric looks like this:</p>
+              <pre class="code-block">from SageNP import NewmanPenrose
+
+# Manifold and coordinates
+MyManifold    = Manifold(4, 'MyManifold', r'\mathcal{Man}')
+MyCoordinates.&lt;t,r,th,ph&gt; = MyManifold.chart(r't r th:\theta ph:\phi')
+
+# Metric functions
+var('M')
+Delta = r^2 - 2*M*r
+
+# Null tetrad (covariant, ordering matches coordinates)
+lvec    = [1, -(r^2)/Delta, 0, 0]
+nvec    = [Delta/(2*r^2), 1/2, 0, 0]
+mvec    = [0, 0, (-r/sqrt(2)), (-I*r/sqrt(2))*sin(th)]
+mbarvec = [0, 0, (-r/sqrt(2)), ( I*r/sqrt(2))*sin(th)]
+
+# Build the NP object (use 'contravariant' if the vectors above are contravariant)
+schw = SageNP(MyManifold, MyCoordinates, lvec, nvec, mvec, mbarvec, 'covariant')</pre>
+              <p>
+                On construction the class builds the metric and prints it to the screen — it is a good habit to verify
+                that the displayed metric matches the one you intended.
+              </p>
+            </div>
+
+            <div class="panel-card">
+              <h3>What SageNP computes</h3>
+              <p>The class exposes a consistent set of <em>calculate</em> and <em>show</em> methods, plus direct
+                access to every quantity by name.</p>
+
+              <h4>Tetrad check</h4>
+              <ul>
+                <li><code class="inline-code">test_nulltetrad()</code> — verifies
+                    <span class="inline-katex" data-katex="\ell \cdot n = -1, m \cdot \bar m = 1">ℓ·n=−1, m·m̄=1</span>
+                    and that every other inner product vanishes.</li>
+              </ul>
+
+              <h4>Spin coefficients (book p. 75–76, Eq. 7.2)</h4>
+              <ul>
+                <li><code class="inline-code">calculate_spincoefficients()</code>, <code class="inline-code">show_spincoefficients()</code></li>
+                <li>Available by name: <code class="inline-code">kappaNP, tauNP, sigmaNP, rhoNP, piNP, nuNP, muNP, lambdaNP, epsilonNP, gammaNP, alphaNP, betaNP</code>
+                    and their conjugates (<code class="inline-code">kappabarNP, …</code>).</li>
+              </ul>
+
+              <h4>Directional derivatives (p. 43, Eq. 3.82)</h4>
+              <ul>
+                <li><code class="inline-code">DlNP(X)</code> — derivative along
+                    <span class="inline-katex" data-katex="\ell">ℓ</span>.</li>
+                <li><code class="inline-code">DeltanNP(X)</code> — derivative along
+                    <span class="inline-katex" data-katex="n">n</span>.</li>
+                <li><code class="inline-code">deltamNP(X)</code>, <code class="inline-code">deltambarNP(X)</code>
+                    — derivatives along <span class="inline-katex" data-katex="m">m</span> and
+                    <span class="inline-katex" data-katex="\bar m">m̄</span>.</li>
+              </ul>
+
+              <h4>Commutators (p. 77, Eq. 7.6)</h4>
+              <ul>
+                <li><code class="inline-code">Deltan_Dl_commNP(X)</code>, <code class="inline-code">deltam_Dl_commNP(X)</code>,
+                    <code class="inline-code">deltam_Deltan_commNP(X)</code>, <code class="inline-code">deltambar_deltam_commNP(X)</code>
+                    return the right-hand sides of the commutation relations.</li>
+              </ul>
+
+              <h4>Curvature</h4>
+              <ul>
+                <li><strong>Weyl tensor components</strong> (p. 38, Eq. 3.59):
+                    <code class="inline-code">calculate_Weyl()</code>, <code class="inline-code">show_Weyl()</code>.
+                    Access via <code class="inline-code">Psi0NP, Psi1NP, Psi2NP, Psi3NP, Psi4NP</code>.</li>
+                <li><strong>Ricci components</strong> (p. 78, Eq. 7.10–7.15):
+                    <code class="inline-code">calculate_Ricci()</code>, <code class="inline-code">show_Ricci()</code>.
+                    Access via <code class="inline-code">Phi00NP, Phi01NP, Phi10NP, Phi02NP, Phi20NP, Phi11NP, Phi12NP, Phi21NP, Phi22NP, LambdaNP</code>.</li>
+              </ul>
+
+              <h4>Field equations and identities</h4>
+              <ul>
+                <li><strong>NP (Ricci) equations</strong> (p. 79, Eq. 7.21):
+                    <code class="inline-code">calculate_NPeq()</code>, <code class="inline-code">show_NPeq()</code>.
+                    The 18 equations are stored as <code class="inline-code">NPeq1 … NPeq18</code>, each written in the form
+                    <span class="inline-katex" data-katex="0 = -\,\text{LHS} + \text{RHS}">0 = −LHS + RHS</span>.</li>
+                <li><strong>Bianchi identities</strong> (p. 81, Eq. 7.32):
+                    <code class="inline-code">calculate_Bianchi()</code>, <code class="inline-code">show_Bianchi()</code>.
+                    The 11 identities are stored as <code class="inline-code">BI1 … BI11</code>.</li>
+              </ul>
+
+              <h4>Petrov classification (Kramer p. 121 Eq. 9.6; p. 54 Eq. 4.19; Fig. 9.1)</h4>
+              <ul>
+                <li>Invariants <span class="inline-katex" data-katex="I, J, K, L, N">I, J, K, L, N</span>:
+                    <code class="inline-code">calculate_PetrovinvINP()</code>,
+                    <code class="inline-code">calculate_PetrovinvJNP()</code>, …
+                    Results in <code class="inline-code">PetrovinvINP, PetrovinvJNP, PetrovinvKNP, PetrovinvLNP, PetrovinvNNP</code>.</li>
+                <li><code class="inline-code">Petrov_frominvariants()</code> — determines the Petrov type from
+                    <span class="inline-katex" data-katex="I, J, K, L, N">I, J, K, L, N</span>.</li>
+                <li><code class="inline-code">Petrov_fromWeyl()</code> — determines it directly from the
+                    <span class="inline-katex" data-katex="\Psi_i">Ψᵢ</span>.</li>
+              </ul>
+
+              <h4>Matter field equations</h4>
+              <ul>
+                <li><code class="inline-code">kleingordon(Phi, M2)</code> — massive Klein–Gordon equation for a scalar
+                    <code class="inline-code">Phi</code> with mass squared <code class="inline-code">M2</code>
+                    (ref.: G. Silva-Ortigoza, <em>Rev. Mex. Fis.</em> <strong>4</strong>, 543 (1996)).
+                    Result stored in <code class="inline-code">kgNP</code>.</li>
+                <li><code class="inline-code">dirac(f1, f2, g1, g2, M2)</code> — massive Dirac equation for a spinor
+                    with components <code class="inline-code">(f1, f2, g1, g2)</code>
+                    (ref.: Chandrasekhar, <em>Mathematical Theory of Black Holes</em>, Oxford, 1983, p. 544).
+                    Result stored in <code class="inline-code">diracNP</code>.</li>
+              </ul>
+
+              <h4>SL(2,C) tetrad transformations</h4>
+              <p>Following Carmeli &amp; Kaye, <em>Ann. Phys.</em> <strong>99</strong>, 188 (1976):</p>
+              <ul>
+                <li><code class="inline-code">type_A_transformation(z)</code> / <code class="inline-code">show_type_A_transformation()</code></li>
+                <li><code class="inline-code">type_B_transformation(z)</code> / <code class="inline-code">show_type_B_transformation()</code></li>
+                <li><code class="inline-code">type_C_transformation(z)</code> / <code class="inline-code">show_type_C_transformation()</code></li>
+              </ul>
+              <p>
+                Each transformation populates a parallel set of attributes
+                (<code class="inline-code">lNP_trA, nNP_trA, mNP_trA, mbarNP_trA</code>, the transformed spin coefficients
+                <code class="inline-code">kappaNP_trA, rhoNP_trA, …</code>, the transformed Weyl and Ricci components
+                <code class="inline-code">Psi0NP_trA, Phi00NP_trA, …</code>), and the analogous
+                <code class="inline-code">_trB</code>, <code class="inline-code">_trC</code> for the other two types.
+              </p>
+
+              <h4>Batch helpers</h4>
+              <ul>
+                <li><code class="inline-code">calculate_allNP()</code> — runs
+                    <code class="inline-code">calculate_spincoefficients()</code>,
+                    <code class="inline-code">calculate_Weyl()</code>,
+                    <code class="inline-code">calculate_Ricci()</code>,
+                    <code class="inline-code">calculate_NPeq()</code>,
+                    <code class="inline-code">calculate_Bianchi()</code>, and
+                    <code class="inline-code">Petrov_fromWeyl()</code> in sequence.</li>
+                <li><code class="inline-code">show_allNP()</code> — displays all of the above.</li>
+              </ul>
+            </div>
+
+            <div class="panel-card">
+              <h3>Files and tutorial</h3>
+              <ul>
+                <li><code class="inline-code">SageNP.py</code> — the module to import in SageMath.</li>
+                <li><a href="https://github.com/tbirkandan/SageNP/blob/main/Notebooks/SageNP_Tutorial.ipynb" class="drive-link" target="_blank" rel="noopener">SageNP_Tutorial.ipynb</a>
+                    — worked examples for Schwarzschild (covariant tetrad) and Reissner–Nordström (contravariant tetrad).</li>
+                <li><a href="https://github.com/tbirkandan/SageNP/blob/main/Notebooks/SageNP_Tutorial.pdf" class="drive-link" target="_blank" rel="noopener">SageNP_Tutorial.pdf</a>
+                    — the same tutorial as a PDF.</li>
+              </ul>
+              <div class="panel-note">
+                SageNP is released under the GNU General Public License v2 or later (GPLv2+). The code is written by
+                Tolga Birkandan, Onur Arman, Emir Baysazan, Selinay Sude Binici, Pelin Öztürk, and Efe Özyürek, with
+                special thanks to Eric Gourgoulhon.
+              </div>
+            </div>
+          </div>
+
+          <!-- PAPERS -->
+          <div class="instructions-panel" id="ins-panel-papers" role="tabpanel" aria-labelledby="ins-tab-papers">
+            <div class="panel-eyebrow">Publications</div>
+            <h2 class="panel-title">Papers from this project</h2>
+            <p class="panel-lead">
+              Publications produced within this project
+            </p>
+
+            <div class="panel-card">
+              <h3>Project publications</h3>
+              <div class="paper-entry">
+                <div class="paper-title">A Coordinate-free Approach to Obtaining Exact Solutions in General Relativity: The Newman-Unti-Tamburino Solution Revisited</div>
+                <div class="paper-meta">Emir Baysazan, Ayşe Hümeyra Bilge,  Tolga Birkandan, Tekin Dereli · Int. J. Theor. Phys., 65, 62 (2026) · <a href="https://arxiv.org/abs/2411.11400" class="drive-link" target="_blank" rel="noopener">arXiv:2411.11400</a></div>
+              </div>
+              <div class="paper-entry">
+                 <div class="paper-title">Non-vacuum metrics for the Newman-Unti-Tamburino background: A coordinate-free approach to diverging and twisting solutions</div>
+                <div class="paper-meta">Ayşe Hümeyra Bilge,  Tolga Birkandan, Tekin Dereli, Gülay Karakaya · 2026 · <a href="https://arxiv.org/abs/2602.20563" class="drive-link" target="_blank" rel="noopener">arXiv:2602.20563</a></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
 
 <!-- Detail Modal -->
@@ -1424,6 +2255,7 @@ let rowsPerPage = 25;
 let searchTerm = '';
 let debounceTimer = null;
 let lastFocusedElement = null;
+let currentAppTab = 'database';
 
 const filters = {
   weyl: [],
@@ -2228,7 +3060,8 @@ function openAttrModal(group) {
 
   const groups = fields.map(f => {
     const selectedVals = tempAttrFilters[f] || [];
-    const buttons = VALUE_OPTIONS.map(v => {
+    const allowedOptions = f === 'Lambda' ? ['0', 'nzr'] : VALUE_OPTIONS;
+    const buttons = allowedOptions.map(v => {
       const sel = selectedVals.includes(v) ? 'selected' : '';
       const label = v === '0' ? '0' : v === 'nzr' ? 'NZR' : 'NZC';
       return `<button class="attr-val-btn ${sel}" data-field="${f}" data-val="${v}" onclick="toggleAttrVal(this)">${label}</button>`;
@@ -2296,6 +3129,7 @@ function closeAttrModal() {
 function showApp() {
   document.getElementById('hero').style.display = 'none';
   document.getElementById('app-view').style.display = 'block';
+  setAppTab(currentAppTab);
   if (allMetrics.length > 0 && filteredMetrics.length === 0) applyFilters();
 }
 
@@ -2304,8 +3138,38 @@ function showHero() {
   document.getElementById('app-view').style.display = 'none';
 }
 
+function setAppTab(tab) {
+  currentAppTab = tab;
+  const isDatabase = tab === 'database';
+  document.getElementById('tab-database').classList.toggle('active', isDatabase);
+  document.getElementById('tab-instructions').classList.toggle('active', !isDatabase);
+  document.getElementById('tab-database').setAttribute('aria-selected', isDatabase ? 'true' : 'false');
+  document.getElementById('tab-instructions').setAttribute('aria-selected', isDatabase ? 'false' : 'true');
+  document.querySelector('.app-layout').style.display = isDatabase ? 'grid' : 'none';
+  document.getElementById('instructions-view').style.display = isDatabase ? 'none' : 'block';
+  document.querySelector('.mobile-filter-toggle').style.display = isDatabase ? '' : 'none';
+  document.getElementById('metric-count').style.display = isDatabase ? 'inline-flex' : 'none';
+  document.querySelector('.topbar-title').textContent = isDatabase ? 'Metrics Database' : 'Instructions';
+  if (!isDatabase) document.getElementById('sidebar').classList.remove('open');
+}
+
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
+}
+
+function setInstructionsTab(name) {
+  document.querySelectorAll('.instructions-tab').forEach(btn => {
+    const isActive = btn.dataset.insTab === name;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+  document.querySelectorAll('.instructions-panel').forEach(panel => {
+    panel.classList.toggle('active', panel.id === 'ins-panel-' + name);
+  });
+  const activePanel = document.getElementById('ins-panel-' + name);
+  if (activePanel) renderInlineKatex(activePanel);
+  const contentEl = document.querySelector('.instructions-content');
+  if (contentEl) contentEl.scrollTop = 0;
 }
 
 function getFocusableElements(container) {
@@ -2400,6 +3264,7 @@ function renderHeroEquations() {
 /* ═══════════════════════ START ═══════════════════════ */
 applyTheme(getTheme());
 renderInlineKatex(document.querySelector('.attr-filters'));
+renderInlineKatex(document.getElementById('instructions-view'));
 init();
 </script>
 </body>
