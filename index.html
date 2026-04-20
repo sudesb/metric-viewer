@@ -2522,17 +2522,17 @@ function toAbsoluteResourceUrl(href) {
 function toNbviewerLink(href) {
   const abs = toAbsoluteResourceUrl(href);
   if (!abs) return '';
-  try {
-    const u = new URL(abs);
-    const host = (u.hostname || '').toLowerCase();
-    if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return '';
-  } catch (_) { return ''; }
+  
+  // 1. Raw GitHub URL'lerini standart GitHub Repo yoluna çevir
   const m = abs.match(/^https?:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+)$/i);
+  
   if (m) {
     const [, owner, repo, branch, rest] = m;
-    // GitHub tree API yerine direkt raw URL üzerinden nbviewer'a yönlendir
-    return `https://nbviewer.org/urls/raw.githubusercontent.com/${owner}/${repo}/${branch}/${rest}`;
+    // Canonical format: nbviewer.org/github/{owner}/{repo}/blob/{branch}/{path}
+    return `https://nbviewer.org/github/${owner}/${repo}/blob/${branch}/${rest}`;
   }
+  
+  // 2. Eğer zaten repo linki ise olduğu gibi bırak veya düzenle
   return 'https://nbviewer.org/urls/' + abs.replace(/^https?:\/\//i, '');
 }
 
