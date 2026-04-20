@@ -2534,7 +2534,7 @@ function toNbviewerLink(href) {
     const [, owner, repo, branch, rest] = m;
     return `https://nbviewer.org/github/${owner}/${repo}/blob/${branch}/${rest}`;
   }
-  return 'https://nbviewer.org/urls/' + abs.replace(/^https?:\/\//i, '');
+  return `https://nbviewer.org/github/${owner}/${repo}/blob/${branch}/${rest}?flush_cache=true`;
 }
 
 function openOnlineNotebook(href) {
