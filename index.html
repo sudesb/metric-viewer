@@ -1690,13 +1690,19 @@ function toAbsoluteResourceUrl(href) {
 function toNbviewerLink(href) {
   const abs = toAbsoluteResourceUrl(href);
   if (!abs) return '';
-  
+  try {
+    const u = new URL(abs);
+    const host = (u.hostname || '').toLowerCase();
+    if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return '';
+  } catch (_) {
+    return '';
+  }
   const m = abs.match(/^https?:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+)$/i);
   if (m) {
     const [, owner, repo, branch, rest] = m;
-    return `https://github.com/${owner}/${repo}/blob/${branch}/${rest}`;
+    return `https://nbviewer.org/github/${owner}/${repo}/blob/${branch}/${rest}`;
   }
-  return '';
+  return 'https://nbviewer.org/urls/' + abs.replace(/^https?:\/\//i, '');
 }
 
 function openOnlineNotebook(href) {
