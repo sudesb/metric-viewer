@@ -3345,8 +3345,11 @@ function openAttrModal(group) {
       return `<button class="attr-val-btn ${sel}" data-field="${f}" data-val="${v}" onclick="toggleAttrVal(this)">${label}</button>`;
     }).join('');
     return `<div class="attr-group">
-      <div class="attr-group-title">${fieldSymbol(f)}</div>
-      <div class="attr-values">${buttons}</div>
+    <div class="attr-group-title">
+    ${fieldSymbol(f)}
+    ${f === 'Lambda' ? '<span style="font-size:0.8em; opacity:0.8; margin-left:0.3rem;">(R/24)</span>' : ''}
+    </div>
+    <div class="attr-values">${buttons}</div>
     </div>`;
   }).join('');
 
