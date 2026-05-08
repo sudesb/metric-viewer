@@ -2422,6 +2422,7 @@ function normalizeSource(val) {
   if (/^Λ[\s-]*[Tt]erm$/i.test(s)) return ['Cosmological Constant (Λ)'];
   if (/^Cosmological\s+Constant\s*\(?(?:Λ|Lambda)\)?$/i.test(s)) return ['Cosmological Constant (Λ)'];
   if (/Einstein-Maxwell\s+or\s+Radiation/i.test(s)) return ['Einstein-Maxwell', 'Radiation'];
+  if(/Vacuum\s+in\s+book/i.test(s)) return ['Vacuum'];
   return [s];
 }
 
@@ -3274,7 +3275,7 @@ function openDetail(index) {
       </div>
 
       <div class="modal-section">
-        <div class="modal-section-title">Λ Coefficient</div>
+        <div class="modal-section-title">Λ Coefficient (R/24)</div>
         <div class="component-grid">
           <div class="comp-item"><span class="comp-label">Λ</span><span class="comp-value ${lambdaVal.cls}">${lambdaVal.text}</span></div>
         </div>
