@@ -1169,6 +1169,55 @@ tbody tr:hover .row-arrow { color: var(--accent); transform: translateX(3px); }
 }
 .modal-close:hover { border-color: var(--rose); color: var(--rose); }
 
+/* Prev / Next navigation between metrics */
+.modal-nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 210;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--border-lit);
+  background: var(--bg-card);
+  color: var(--text-dim);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  user-select: none;
+}
+.modal-nav:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-glow);
+}
+.modal-nav:disabled { opacity: 0.25; cursor: default; }
+.modal-nav-prev { left: max(0.75rem, calc(50% - 400px - 72px)); }
+.modal-nav-next { right: max(0.75rem, calc(50% - 400px - 72px)); }
+
+.modal-position {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 960px) {
+  .modal-nav {
+    width: 40px;
+    height: 40px;
+    top: auto;
+    bottom: 1rem;
+    transform: none;
+  }
+  .modal-nav-prev { left: 1rem; }
+  .modal-nav-next { right: 1rem; }
+}
+
 .modal-body { padding: 1.5rem; }
 
 .metric-tex-container {
@@ -1807,7 +1856,7 @@ html[data-theme="light"] .btn-primary:hover { background: #b45309; }
                 This work is funded by <strong>TÜBİTAK 1001 Program, Grant Number 123R114</strong>.
               </p>
               <p style="margin-top:0.75rem;">
-                <strong>Contributors:</strong> Prof. Dr. Ayşe Hümeyra Bilge, Prof. Dr. Tolga Birkandan, Dr. Gülay Karakaya, Emir Baysazan, Selinay Sude Binici, Merve Yılmaz, Sezin Giravioğlu, Efe Özyürek, Ramazan Gökay Günay, Caner Karaca, Sarp Yılmaz, Şimal Serdaroğlu, Tuba Önen
+                <strong>Contributors:</strong> Prof. Dr. Ayşe Hümeyra Bilge, Prof. Dr. Tolga Birkandan, Dr. Gülay Karakaya, Emir Baysazan, Selinay Sude Binici, Merve Yılmaz, Sezin Giravioğlu, Efe Özyürek, Ramazan Gökay Günay, Caner Karaca, Sarp Yılmaz, Şimal Serdaroğlu, Tuba Önen, Onur Arman
               </p>
             </div>
           </div>
@@ -2162,7 +2211,9 @@ schw = SageNP(MyManifold, MyCoordinates, lvec, nvec, mvec, mbarvec, 'covariant')
 
 <!-- Detail Modal -->
 <div class="modal-overlay" id="detail-modal" aria-hidden="true">
+  <button class="modal-nav modal-nav-prev" id="detail-nav-prev" type="button" aria-label="Previous metric" onclick="navDetail(-1)">‹</button>
   <div class="modal" id="detail-modal-content" role="dialog" aria-modal="true" aria-labelledby="detail-modal-title" tabindex="-1"></div>
+  <button class="modal-nav modal-nav-next" id="detail-nav-next" type="button" aria-label="Next metric" onclick="navDetail(1)">›</button>
 </div>
 
 <!-- Attribute Filter Modal -->
@@ -2377,6 +2428,7 @@ let searchTerm = '';
 let debounceTimer = null;
 let lastFocusedElement = null;
 let currentAppTab = 'database';
+let currentDetailIndex = -1;
 
 const filters = {
   weyl: [],
@@ -3137,13 +3189,15 @@ document.getElementById('search-input').addEventListener('input', function(e) {
 function openDetail(index) {
   const m = filteredMetrics[index];
   if (!m) return;
+  currentDetailIndex = index;
 
   const globalIdx = allMetrics.indexOf(m);
   const texStr = (globalIdx >= 0 && TEX_METRICS[globalIdx]) ? TEX_METRICS[globalIdx] : '';
 
   const overlay = document.getElementById('detail-modal');
   const content = document.getElementById('detail-modal-content');
-  lastFocusedElement = document.activeElement;
+  const alreadyOpen = overlay.classList.contains('show');
+  if (!alreadyOpen) lastFocusedElement = document.activeElement;
 
   const weylComps = WEYL_FIELDS.map(f => {
     const v = formatValue(m[f]);
@@ -3229,6 +3283,7 @@ function openDetail(index) {
       <div>
         <div class="modal-title" id="detail-modal-title">${m['Equation Name'] ? formatDisplayText(m['Equation Name']) : ''}</div>
         <div class="modal-eq-num">Equation ${escapeHTML(m['Equation Number'] || '—')}</div>
+        <div class="modal-position">${index + 1} / ${filteredMetrics.length} in current results</div>
       </div>
       <button class="modal-close" type="button" aria-label="Close details" onclick="closeDetail()">&times;</button>
     </div>
@@ -3290,10 +3345,14 @@ function openDetail(index) {
     </div>
   `;
 
+  document.getElementById('detail-nav-prev').disabled = index <= 0;
+  document.getElementById('detail-nav-next').disabled = index >= filteredMetrics.length - 1;
+
   overlay.classList.add('show');
   overlay.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
-  content.focus();
+  content.scrollTop = 0;
+  if (!alreadyOpen) content.focus();
   renderInlineKatex(content);
 
   if (texStr && typeof katex !== 'undefined') {
@@ -3316,8 +3375,35 @@ function closeDetail() {
   overlay.classList.remove('show');
   overlay.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
+  currentDetailIndex = -1;
   if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') lastFocusedElement.focus();
 }
+
+function navDetail(dir) {
+  if (currentDetailIndex < 0) return;
+  const next = currentDetailIndex + dir;
+  if (next < 0 || next >= filteredMetrics.length) return;
+  openDetail(next);
+}
+
+/* Swipe left/right on touch devices to move between metrics */
+(function initDetailSwipe() {
+  const content = document.getElementById('detail-modal-content');
+  let startX = null, startY = null;
+  content.addEventListener('touchstart', function(e) {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  content.addEventListener('touchend', function(e) {
+    if (startX === null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      navDetail(dx < 0 ? 1 : -1);
+    }
+    startX = startY = null;
+  }, { passive: true });
+})();
 
 /* ═══════════════════════ ATTRIBUTE FILTER MODAL ═══════════════════════ */
 let currentAttrGroup = null;
@@ -3486,6 +3572,8 @@ document.getElementById('attr-modal').addEventListener('click', function(e) {
 /* ESC key */
 document.addEventListener('keydown', function(e) {
   if (document.getElementById('detail-modal').classList.contains('show')) {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); navDetail(-1); return; }
+    if (e.key === 'ArrowRight') { e.preventDefault(); navDetail(1); return; }
     trapFocus(e, document.getElementById('detail-modal-content'));
   } else if (document.getElementById('attr-modal').classList.contains('show')) {
     trapFocus(e, document.getElementById('attr-modal-content'));
