@@ -321,6 +321,53 @@ html[data-theme="light"] .topbar {
   color: var(--bg-deep);
 }
 
+.modal-head-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+.modal-link-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  height: 32px;
+  padding: 0 0.65rem;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  transition: var(--transition);
+}
+.modal-link-btn:hover { border-color: var(--accent); color: var(--accent); }
+.modal-link-btn svg { width: 14px; height: 14px; }
+@media (max-width: 600px) {
+  .modal-link-btn { padding: 0 0.55rem; }
+  .modal-link-btn span { display: none; }
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translate(-50%, 12px);
+  z-index: 2000;
+  background: var(--text);
+  color: var(--bg-deep);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
 .topbar-count {
   font-family: var(--font-mono);
   font-size: 0.85rem;
@@ -1118,7 +1165,7 @@ tbody tr:hover .row-arrow { color: var(--accent); transform: translateX(3px); }
   border-radius: var(--radius-lg);
   width: 100%;
   max-width: 800px;
-  max-height: 85vh;
+  max-height: min(calc(85vh + 56px), calc(100vh - 1.5rem));
   overflow-y: auto;
   transform: translateY(20px) scale(0.97);
   transition: transform 0.25s ease;
@@ -1232,6 +1279,73 @@ tbody tr:hover .row-arrow { color: var(--accent); transform: translateX(3px); }
   margin: 0;
 }
 .metric-tex-container .katex { font-size: 0.95em; }
+.metric-tex-container.compact { padding: 0.7rem 1.2rem; }
+
+.modal-section-title.has-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.copy-tex-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  height: 26px;
+  padding: 0 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: none;
+  color: var(--text-dim);
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.copy-tex-btn svg { width: 13px; height: 13px; }
+.copy-tex-btn:hover { border-color: var(--accent); color: var(--accent); }
+.copy-tex-btn.copied { border-color: var(--accent); color: var(--accent); }
+
+.tetrad-type-tag {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: var(--text-dim);
+  vertical-align: 1px;
+}
+
+.fn-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.fn-row {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 0.75rem;
+  align-items: baseline;
+}
+.fn-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.fn-body { color: var(--text); font-size: 0.92rem; line-height: 1.6; min-width: 0; }
+@media (max-width: 600px) {
+  .fn-row { grid-template-columns: 1fr; gap: 0.15rem; }
+  .fn-label:empty { display: none; }
+}
 .metric-unavailable {
   color: var(--text-muted);
   font-style: italic;
@@ -1856,7 +1970,7 @@ html[data-theme="light"] .btn-primary:hover { background: #b45309; }
                 This work is funded by <strong>TÜBİTAK 1001 Program, Grant Number 123R114</strong>.
               </p>
               <p style="margin-top:0.75rem;">
-                <strong>Contributors:</strong> Prof. Dr. Ayşe Hümeyra Bilge, Prof. Dr. Tolga Birkandan, Dr. Gülay Karakaya, Emir Baysazan, Selinay Sude Binici, Merve Yılmaz, Sezin Giravioğlu, Efe Özyürek, Ramazan Gökay Günay, Caner Karaca, Sarp Yılmaz, Şimal Serdaroğlu, Tuba Önen, Onur Arman
+                <strong>Contributors:</strong> Prof. Dr. Ayşe Hümeyra Bilge, Prof. Dr. Tolga Birkandan, Dr. Gülay Karakaya, Emir Baysazan, Selinay Sude Binici, Merve Yılmaz, Sezin Giravioğlu, Efe Özyürek, Ramazan Gökay Günay, Caner Karaca, Sarp Yılmaz, Şimal Serdaroğlu, Tuba Önen
               </p>
             </div>
           </div>
@@ -2235,6 +2349,8 @@ schw = SageNP(MyManifold, MyCoordinates, lvec, nvec, mvec, mbarvec, 'covariant')
   </div>
 </div>
 
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script>
 /* ═══════════════════════ THEME ═══════════════════════ */
 function getTheme() {
@@ -2516,6 +2632,19 @@ const FILTER_CATEGORIES = [
 
 let TEX_METRICS = [];
 
+/* Computation data (coordinates, tetrad, metric functions) kept off the row
+   objects so it never leaks into search or generic field listings. */
+const COMPUTE_COLUMNS = {
+  coords: 'Coordinates_LaTeX',
+  type:   'Tetrad_Type',
+  l:      'Tetrad_l_LaTeX',
+  n:      'Tetrad_n_LaTeX',
+  m:      'Tetrad_m_LaTeX',
+  mbar:   'Tetrad_mbar_LaTeX',
+  fns:    'Metric_Functions_LaTeX'
+};
+const METRIC_TEX = new WeakMap();
+
 function inferMetricDiagonalType(tex) {
   if (!tex || !tex.trim()) return 'Non-diagonal';
   const compact = tex
@@ -2541,6 +2670,12 @@ function inferMetricDiagonalType(tex) {
 function prepareRows(rows) {
   TEX_METRICS = rows.map(m => String(m['Metric_LaTeX'] || ''));
   rows.forEach((m, index) => {
+    const tex = { metric: TEX_METRICS[index] };
+    for (const [key, col] of Object.entries(COMPUTE_COLUMNS)) {
+      tex[key] = m[col] === undefined || m[col] === null ? '' : String(m[col]).trim();
+      delete m[col];
+    }
+    METRIC_TEX.set(m, tex);
     delete m['Metric_LaTeX'];
     if (m['Source (T_munu)'] !== undefined && m['Source (T_μν)'] === undefined) {
       m['Source (T_μν)'] = m['Source (T_munu)'];
@@ -2558,6 +2693,7 @@ function prepareRows(rows) {
   buildFilterOptions();
   applyFilters();
   renderHeroEquations();
+  restoreStateFromURL({ initial: true });
 }
 
 function showLoadingError(message) {
@@ -3034,6 +3170,7 @@ function applyFilters() {
   renderChips();
   updateBadges();
   document.getElementById('metric-count').textContent = filteredMetrics.length + ' metric' + (filteredMetrics.length !== 1 ? 's' : '');
+  syncURL();
 }
 
 /* ═══════════════════════ RENDER TABLE ═══════════════════════ */
@@ -3116,6 +3253,7 @@ function goPage(p) {
   currentPage = Math.max(0, Math.min(p, totalPages - 1));
   renderTable();
   renderPagination();
+  syncURL();
 }
 
 function changeRowsPerPage(val) {
@@ -3123,6 +3261,7 @@ function changeRowsPerPage(val) {
   currentPage = 0;
   renderTable();
   renderPagination();
+  syncURL();
 }
 
 /* ═══════════════════════ CHIPS & BADGES ═══════════════════════ */
@@ -3186,13 +3325,15 @@ document.getElementById('search-input').addEventListener('input', function(e) {
 });
 
 /* ═══════════════════════ DETAIL MODAL ═══════════════════════ */
-function openDetail(index) {
+function openDetail(index, opts = {}) {
   const m = filteredMetrics[index];
   if (!m) return;
   currentDetailIndex = index;
 
-  const globalIdx = allMetrics.indexOf(m);
-  const texStr = (globalIdx >= 0 && TEX_METRICS[globalIdx]) ? TEX_METRICS[globalIdx] : '';
+  const tex = METRIC_TEX.get(m) || {};
+  const texStr = tex.metric || '';
+  currentTexBlocks = buildTexBlocks(m, tex);
+  const tb = currentTexBlocks;
 
   const overlay = document.getElementById('detail-modal');
   const content = document.getElementById('detail-modal-content');
@@ -3285,13 +3426,37 @@ function openDetail(index) {
         <div class="modal-eq-num">Equation ${escapeHTML(m['Equation Number'] || '—')}</div>
         <div class="modal-position">${index + 1} / ${filteredMetrics.length} in current results</div>
       </div>
-      <button class="modal-close" type="button" aria-label="Close details" onclick="closeDetail()">&times;</button>
+      <div class="modal-head-actions">
+        ${tb.all ? `<button class="modal-link-btn" type="button" onclick="copyTexBlock('all', this)" title="Copy coordinates, metric, tetrad and metric functions as one LaTeX block" aria-label="Copy all as LaTeX">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span>Copy all TeX</span>
+        </button>` : ''}
+        <button class="modal-close" type="button" aria-label="Close details" onclick="closeDetail()">&times;</button>
+      </div>
     </div>
     <div class="modal-body">
+      ${tb.coords ? `<div class="modal-section">
+        <div class="modal-section-title has-action"><span>Coordinates</span>${copyTexButton('coords', 'coordinates')}</div>
+        <div class="metric-tex-container compact" id="coords-tex-render"></div>
+      </div>` : ''}
+
       <div class="modal-section" id="metric-tex-section" style="${texStr ? '' : 'display:none'}">
-        <div class="modal-section-title">Metric</div>
+        <div class="modal-section-title has-action"><span>Metric</span>${copyTexButton('metric', 'metric')}</div>
         <div class="metric-tex-container" id="metric-tex-render"></div>
       </div>
+
+      ${tb.tetrad ? `<div class="modal-section">
+        <div class="modal-section-title has-action">
+          <span>Null tetrad <span class="tetrad-type-tag">${escapeHTML(tb.tetradType)}</span></span>
+          ${copyTexButton('tetrad', 'tetrad')}
+        </div>
+        <div class="metric-tex-container" id="tetrad-tex-render"></div>
+      </div>` : ''}
+
+      ${tb.functions ? `<div class="modal-section">
+        <div class="modal-section-title has-action"><span>Metric functions</span>${copyTexButton('functions', 'metric functions')}</div>
+        <div class="metric-tex-container fn-list">${renderFunctionLines(tex.fns)}</div>
+      </div>` : ''}
 
       <div class="modal-section">
         <div class="modal-section-title">Basic Information</div>
@@ -3354,6 +3519,10 @@ function openDetail(index) {
   content.scrollTop = 0;
   if (!alreadyOpen) content.focus();
   renderInlineKatex(content);
+  if (!opts.fromURL) syncURL(alreadyOpen ? 'replace' : 'push');
+
+  renderDisplayTex('coords-tex-render', tb.coords);
+  renderDisplayTex('tetrad-tex-render', tb.tetrad);
 
   if (texStr && typeof katex !== 'undefined') {
     try {
@@ -3371,6 +3540,18 @@ function openDetail(index) {
 }
 
 function closeDetail() {
+  if (!document.getElementById('detail-modal').classList.contains('show')) return;
+  // If the modal was opened by a click (history entry pushed), go back so the
+  // browser Back button and the close button behave the same way.
+  if (history.state && history.state.npModal) {
+    history.back();
+    return;
+  }
+  hideDetailModal();
+  syncURL();
+}
+
+function hideDetailModal() {
   const overlay = document.getElementById('detail-modal');
   overlay.classList.remove('show');
   overlay.setAttribute('aria-hidden', 'true');
@@ -3499,11 +3680,13 @@ function showApp() {
   document.getElementById('app-view').style.display = 'block';
   setAppTab(currentAppTab);
   if (allMetrics.length > 0 && filteredMetrics.length === 0) applyFilters();
+  syncURL();
 }
 
 function showHero() {
   document.getElementById('hero').style.display = 'flex';
   document.getElementById('app-view').style.display = 'none';
+  syncURL();
 }
 
 function setAppTab(tab) {
@@ -3519,13 +3702,18 @@ function setAppTab(tab) {
   document.getElementById('metric-count').style.display = isDatabase ? 'inline-flex' : 'none';
   document.querySelector('.topbar-title').textContent = isDatabase ? 'Metrics Database' : 'Instructions';
   if (!isDatabase) document.getElementById('sidebar').classList.remove('open');
+  syncURL();
 }
 
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
 }
 
+let currentInstructionsTab = 'about';
+
 function setInstructionsTab(name) {
+  if (!document.getElementById('ins-panel-' + name)) name = 'about';
+  currentInstructionsTab = name;
   document.querySelectorAll('.instructions-tab').forEach(btn => {
     const isActive = btn.dataset.insTab === name;
     btn.classList.toggle('active', isActive);
@@ -3538,6 +3726,7 @@ function setInstructionsTab(name) {
   if (activePanel) renderInlineKatex(activePanel);
   const contentEl = document.querySelector('.instructions-content');
   if (contentEl) contentEl.scrollTop = 0;
+  syncURL();
 }
 
 function getFocusableElements(container) {
@@ -3580,9 +3769,9 @@ document.addEventListener('keydown', function(e) {
   }
 
   if (e.key === 'Escape') {
+    if (document.getElementById('nb-modal').classList.contains('show')) { closeNbModal(); return; }
+    if (document.getElementById('attr-modal').classList.contains('show')) { closeAttrModal(); return; }
     closeDetail();
-    closeAttrModal();
-    if (document.getElementById('nb-modal').classList.contains('show')) closeNbModal();
   }
 });
 
@@ -3631,6 +3820,294 @@ function renderHeroEquations() {
     else window.addEventListener('load', doRender);
   }
 }
+
+
+/* ═══════════════════════ COMPUTATION DATA (TeX copy) ═══════════════════════ */
+let currentTexBlocks = {};
+
+const COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+const FN_LABELS = ['Definitions', 'Functions', 'Constants', 'Constant', 'Conditions'];
+
+function copyTexButton(kind, what) {
+  return `<button class="copy-tex-btn" type="button" onclick="copyTexBlock('${kind}', this)" aria-label="Copy ${what} as LaTeX" title="Copy ${what} as LaTeX">${COPY_ICON}<span>Copy TeX</span></button>`;
+}
+
+function buildTexBlocks(m, tex) {
+  const out = {};
+  const coords = (tex.coords || '').split(',').map(s => s.trim()).filter(Boolean);
+  const contra = /^contra/i.test(tex.type || '');
+  const idx = contra ? '^{\\mu}' : '_{\\mu}';
+  out.tetradType = contra ? 'contravariant' : 'covariant';
+
+  out.coords = coords.length ? `x^{\\mu} = (${coords.join(',\\; ')})` : '';
+  out.metric = tex.metric || '';
+
+  const vecs = [['l', 'l'], ['n', 'n'], ['m', 'm'], ['mbar', '\\bar{m}']].filter(([k]) => tex[k]);
+  out.tetrad = vecs.length
+    ? '\\begin{aligned}\n' + vecs.map(([k, sym]) => `${sym}${idx} &= ${tex[k]}`).join(' \\\\\n') + '\n\\end{aligned}'
+    : '';
+
+  const fnLines = (tex.fns || '').split('\n').map(s => s.trim()).filter(Boolean);
+  out.functions = fnLines.join('\n\n');
+
+  const parts = [];
+  const title = [m['Equation Number'] ? `Equation ${m['Equation Number']}` : '', m['Book'] || ''].filter(Boolean).join(', ');
+  if (title) parts.push(`% ${title}`);
+  if (out.coords) parts.push(`% Coordinates\n\\[\n${out.coords}\n\\]`);
+  if (out.metric) parts.push(`% Metric\n\\[\n${out.metric}\n\\]`);
+  if (out.tetrad) parts.push(`% Null tetrad (${out.tetradType})\n\\[\n${out.tetrad}\n\\]`);
+  if (out.functions) parts.push(`% Metric functions\n${out.functions}`);
+  out.all = (out.coords || out.tetrad || out.functions) ? parts.join('\n\n') + '\n' : '';
+  return out;
+}
+
+function renderDisplayTex(elId, tex) {
+  const el = document.getElementById(elId);
+  if (!el || !tex) return;
+  if (typeof katex === 'undefined') { el.textContent = tex; return; }
+  try {
+    katex.render(tex, el, { displayMode: true, throwOnError: false, trust: true, maxSize: 500, maxExpand: 1000 });
+  } catch (_) {
+    el.textContent = tex;
+  }
+}
+
+/* "Label: text with $math$" → label column + mixed text/KaTeX */
+function renderFunctionLines(text) {
+  return (text || '').split('\n').map(s => s.trim()).filter(Boolean).map(line => {
+    let label = '';
+    const lm = line.match(/^([A-Za-z]+)\s*:\s*(.*)$/);
+    if (lm && FN_LABELS.includes(lm[1])) { label = lm[1] === 'Constant' ? 'Constants' : lm[1]; line = lm[2]; }
+    const body = line.split(/(\$[^$]*\$)/).map(seg =>
+      seg.startsWith('$') && seg.endsWith('$') && seg.length > 1
+        ? katexInline(seg.slice(1, -1).trim(), escapeHTML(seg))
+        : escapeHTML(seg)
+    ).join('');
+    return `<div class="fn-row">${label ? `<span class="fn-label">${label}</span>` : '<span class="fn-label"></span>'}<span class="fn-body">${body}</span></div>`;
+  }).join('');
+}
+
+async function copyTexBlock(kind, btn) {
+  const text = currentTexBlocks[kind];
+  if (!text) return;
+  const ok = await copyText(text);
+  const names = { coords: 'Coordinates', metric: 'Metric', tetrad: 'Tetrad', functions: 'Metric functions', all: 'All computation data' };
+  showToast(ok ? `${names[kind] || 'TeX'} copied as LaTeX` : 'Could not copy');
+  if (ok && btn) {
+    const label = btn.querySelector('span');
+    if (label) {
+      const prev = label.textContent;
+      label.textContent = 'Copied';
+      btn.classList.add('copied');
+      setTimeout(() => { label.textContent = prev; btn.classList.remove('copied'); }, 1400);
+    }
+  }
+}
+
+/* ═══════════════════════ URL STATE (shareable links) ═══════════════════════
+   Everything the user sees is mirrored into the query string, e.g.
+     ?weyl=Type+D&src=Vacuum&psi_0=0&rho=nzr,nzc&q=kerr&page=2
+     ?m=12.6_1                      → opens that metric directly
+     ?view=instructions&section=sagemath
+   Filter changes use history.replaceState (no history spam); opening a metric
+   uses pushState so the browser Back button closes it.                      */
+
+const URL_KEYS = { weyl: 'weyl', symmetry: 'sym', source: 'src', diagonal: 'form' };
+const ALL_ATTR_FIELDS = [...WEYL_FIELDS, ...RICCI_FIELDS, 'Lambda', ...SPIN_FIELDS];
+let urlReady = false;       // no URL writes until the initial state has been restored
+let restoringURL = false;   // suppress writes while applying a URL
+
+function metricId(m) {
+  const file = (m['SageMath local file'] || '').trim();
+  if (file) return file.replace(/[._]ipynb$/i, '');
+  return (m['Equation Number'] || '').trim();
+}
+
+function attrGroupOf(field) {
+  if (WEYL_FIELDS.includes(field)) return 'weyl';
+  if (RICCI_FIELDS.includes(field) || field === 'Lambda') return 'ricci';
+  return 'spin';
+}
+
+function encVal(v) { return encodeURIComponent(v).replace(/%20/g, '+'); }
+function decVal(v) { try { return decodeURIComponent(v.replace(/\+/g, ' ')); } catch (_) { return v; } }
+
+function isAppVisible() {
+  return document.getElementById('app-view').style.display === 'block';
+}
+
+function buildQuery() {
+  const parts = [];
+  const add = (k, vals) => {
+    const arr = Array.isArray(vals) ? vals : [vals];
+    if (arr.length) parts.push(k + '=' + arr.map(encVal).join(','));
+  };
+
+  if (!isAppVisible()) return '';
+
+  if (currentAppTab === 'instructions') {
+    add('view', 'instructions');
+    if (currentInstructionsTab !== 'about') add('section', currentInstructionsTab);
+    return parts.join('&');
+  }
+
+  if (searchTerm) add('q', searchTerm);
+  for (const cat of FILTER_CATEGORIES) {
+    if (filters[cat.key].length) add(URL_KEYS[cat.key], filters[cat.key]);
+  }
+  for (const group of Object.keys(attrFilters)) {
+    for (const [field, vals] of Object.entries(attrFilters[group])) {
+      if (vals.length) add(field, vals);
+    }
+  }
+  if (currentPage > 0) add('page', String(currentPage + 1));
+  if (rowsPerPage !== 25) add('per', String(rowsPerPage));
+  const open = document.getElementById('detail-modal').classList.contains('show');
+  if (open && filteredMetrics[currentDetailIndex]) add('m', metricId(filteredMetrics[currentDetailIndex]));
+
+  if (!parts.length) add('view', 'database');
+  return parts.join('&');
+}
+
+function syncURL(mode = 'replace') {
+  if (!urlReady || restoringURL) return;
+  const qs = buildQuery();
+  const url = location.pathname + (qs ? '?' + qs : '') + location.hash;
+  const state = { npModal: mode === 'push' ? true : !!(history.state && history.state.npModal) };
+  if (mode === 'replace' && !qs.includes('m=')) state.npModal = false;
+  if (url === location.pathname + location.search + location.hash && mode === 'replace') return;
+  try {
+    if (mode === 'push') history.pushState(state, '', url);
+    else history.replaceState(state, '', url);
+  } catch (_) { /* some browsers block history changes on file:// */ }
+}
+
+function parseQuery() {
+  const out = {};
+  const qs = location.search.replace(/^\?/, '');
+  if (!qs) return out;
+  qs.split('&').forEach(pair => {
+    if (!pair) return;
+    const i = pair.indexOf('=');
+    const key = decVal(i >= 0 ? pair.slice(0, i) : pair);
+    const raw = i >= 0 ? pair.slice(i + 1) : '';
+    out[key] = raw === '' ? [] : raw.split(',').map(decVal);
+  });
+  return out;
+}
+
+function restoreStateFromURL({ initial = false } = {}) {
+  const params = parseQuery();
+  const hasParams = Object.keys(params).length > 0;
+  restoringURL = true;
+  try {
+    if (!hasParams) {
+      if (document.getElementById('detail-modal').classList.contains('show')) hideDetailModal();
+      if (!initial) {
+        document.getElementById('hero').style.display = 'flex';
+        document.getElementById('app-view').style.display = 'none';
+      }
+      return;
+    }
+
+    // Search
+    searchTerm = (params.q && params.q[0]) || '';
+    document.getElementById('search-input').value = searchTerm;
+
+    // Category filters (only accept known options)
+    for (const cat of FILTER_CATEGORIES) {
+      const vals = params[URL_KEYS[cat.key]] || [];
+      filters[cat.key] = vals.filter(v => cat.fixedOptions.includes(v));
+      document.querySelectorAll(`.filter-opt[data-cat="${cat.key}"]`).forEach(el => {
+        el.classList.toggle('selected', filters[cat.key].includes(el.getAttribute('data-val')));
+      });
+    }
+
+    // Attribute filters
+    for (const g of Object.keys(attrFilters)) attrFilters[g] = {};
+    for (const field of ALL_ATTR_FIELDS) {
+      const allowed = field === 'Lambda' ? ['0', 'nzr'] : VALUE_OPTIONS;
+      const vals = (params[field] || []).map(v => v.toLowerCase()).filter(v => allowed.includes(v));
+      if (vals.length) attrFilters[attrGroupOf(field)][field] = [...new Set(vals)];
+    }
+
+    // Paging
+    const per = parseInt((params.per || [])[0], 10);
+    rowsPerPage = [10, 25, 50, 100].includes(per) ? per : 25;
+    const page = parseInt((params.page || [])[0], 10);
+    currentPage = Number.isFinite(page) && page > 0 ? page - 1 : 0;
+
+    // View
+    document.getElementById('hero').style.display = 'none';
+    document.getElementById('app-view').style.display = 'block';
+    const view = (params.view || [])[0];
+    setAppTab(view === 'instructions' ? 'instructions' : 'database');
+    if (view === 'instructions') setInstructionsTab((params.section || [])[0] || 'about');
+
+    applyFilters();
+    goPage(currentPage);
+
+    // Metric
+    const wantId = (params.m || [])[0];
+    if (wantId) {
+      let idx = filteredMetrics.findIndex(m => metricId(m) === wantId);
+      if (idx < 0 && allMetrics.some(m => metricId(m) === wantId)) {
+        // The metric is hidden by the filters in the link: drop the filters so it can be shown.
+        for (const cat of Object.keys(filters)) filters[cat] = [];
+        for (const g of Object.keys(attrFilters)) attrFilters[g] = {};
+        searchTerm = '';
+        document.getElementById('search-input').value = '';
+        document.querySelectorAll('.filter-opt.selected').forEach(el => el.classList.remove('selected'));
+        applyFilters();
+        idx = filteredMetrics.findIndex(m => metricId(m) === wantId);
+      }
+      if (idx >= 0) {
+        currentPage = Math.floor(idx / rowsPerPage);
+        renderTable(); renderPagination();
+        openDetail(idx, { fromURL: true });
+      }
+    } else if (document.getElementById('detail-modal').classList.contains('show')) {
+      hideDetailModal();
+    }
+  } finally {
+    restoringURL = false;
+    if (initial) urlReady = true;
+    syncURL();   // normalise the URL (drops unknown/invalid params)
+  }
+}
+
+window.addEventListener('popstate', () => {
+  if (!allMetrics.length) return;
+  restoreStateFromURL();
+});
+
+/* Copy helpers */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (_) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (_) {}
+    ta.remove();
+    return ok;
+  }
+}
+
 
 /* ═══════════════════════ START ═══════════════════════ */
 applyTheme(getTheme());
